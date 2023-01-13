@@ -64,8 +64,9 @@ module.exports = {
         lgWrapper: "30.90178fr 38.19459fr 30.90178fr",
       },
       gridTemplateRows: {
-        mdWrapper: "11.80426fr 76.39148fr 11.80426fr",
-        lgWrapper: "19.1fr 61.8fr 19.1fr",
+        smWrapper: "11.80426fr 76.39148fr 11.80426fr",
+        mdWrapper: "19.1fr 61.8fr 19.1fr",
+        lgWrapper: "30.90178fr 38.19459fr 30.90178fr",
       },
     },
     screens: {

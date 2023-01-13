@@ -1,4 +1,5 @@
 import React from "react";
+import { BttnsContainer } from "../../styledTwComponents/bttnsContainer";
 import { OperandBttn } from "../../styledTwComponents/operandBttn";
 import { OperatorBttn } from "../../styledTwComponents/operatorBttn";
 import type { Dispatch, State } from "../../typings/types";
@@ -23,11 +24,11 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
       </div>
 
       {/* buttons */}
-      <div className="row-span-4 grid grid-rows-5 gap-y-4">
+      <BttnsContainer state={state}>
         {/* row 1 */}
         <div className="row-span-1 grid grid-cols-4 gap-4">
           <OperandBttn state={state}>7</OperandBttn>
-          <OperandBttn state={state}>9</OperandBttn>
+          <OperandBttn state={state}>8</OperandBttn>
           <OperandBttn state={state}>9</OperandBttn>
           <OperatorBttn state={state}>DEL</OperatorBttn>
         </div>
@@ -65,7 +66,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
             =
           </button>
         </div>
-      </div>
+      </BttnsContainer>
     </div>
   );
 }

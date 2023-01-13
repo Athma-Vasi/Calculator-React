@@ -12,7 +12,7 @@ const Home: NextPage = () => {
       history: [],
     },
     themeState: {
-      $theme: "theme1",
+      $theme: "theme2",
     },
   };
 
@@ -42,11 +42,14 @@ const Home: NextPage = () => {
 
   return (
     <MainWrapper windowSize={windowSize}>
+      {/* left padding empty div */}
       <div className="col-start-1 col-end-2 row-start-1 row-end-4 outline-dotted"></div>
 
       <div className="col-span-1 row-start-2 row-end-3 outline-dashed">
         <Calculator state={state} action={action} dispatch={dispatch} />
       </div>
+
+      {/* right padding empty div */}
       <div className="col-start-3 col-end-4 row-start-1 row-end-4 outline-double"></div>
     </MainWrapper>
   );

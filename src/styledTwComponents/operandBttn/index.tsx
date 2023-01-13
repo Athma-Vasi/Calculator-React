@@ -1,20 +1,16 @@
 import tw from "tailwind-styled-components";
+import type { State } from "../../typings/types";
 
 type OperandBttnProps = {
-  state: {
-    themeState: {
-      $theme: "theme1" | "theme2" | "theme3";
-    };
-  };
+  state: State;
 };
 
 const OperandBttn = tw.button<OperandBttnProps>`
-  grid
-  place-content-center
+  pt-1
   font-bold
+  text-2xl
   rounded-lg
   shadow-md  
-
   
   ${({
     state: {

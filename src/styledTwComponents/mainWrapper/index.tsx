@@ -18,10 +18,10 @@ w-screen
 
 ${({ windowSize: { width, height } }) =>
   width < 768
-    ? "grid-cols-smWrapper"
+    ? "grid-cols-smWrapper grid-rows-mdWrapper"
     : width < 1060
     ? "grid-cols-mdWrapper grid-rows-mdWrapper"
-    : "grid-cols-lgWrapper grid-rows-lgWrapper"}
+    : "grid-cols-lgWrapper grid-rows-smWrapper"}
 
 
 `;

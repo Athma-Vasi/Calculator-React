@@ -1,17 +1,15 @@
 import tw from "tailwind-styled-components";
+import type { State } from "../../typings/types";
 
 type OperatorBttnProps = {
-  state: {
-    themeState: {
-      $theme: "theme1" | "theme2" | "theme3";
-    };
-  };
+  state: State;
 };
 
 const OperatorBttn = tw.button<OperatorBttnProps>`
-grid
-place-content-center
+pt-1
 font-bold
+text-lg
+tracking-wide
 rounded-lg
 shadow-md 
 
