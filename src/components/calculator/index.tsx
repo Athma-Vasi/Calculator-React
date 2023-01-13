@@ -1,6 +1,7 @@
 import React from "react";
 import { BttnsContainer } from "../../styledTwComponents/bttnsContainer";
 import { Display } from "../../styledTwComponents/display";
+import { EnterBttn } from "../../styledTwComponents/enterBttn";
 import { History } from "../../styledTwComponents/history";
 import { OperandBttn } from "../../styledTwComponents/operandBttn";
 import { OperatorBttn } from "../../styledTwComponents/operatorBttn";
@@ -58,11 +59,14 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         {/* row 5 */}
         <div className="row-span-1 grid grid-cols-4 gap-4">
           <OperatorBttn state={state} className="col-span-2">
-            RESET
+            CLEAR
           </OperatorBttn>
-          <button type="submit" className="col-span-2">
-            =
-          </button>
+
+          <div className="col-span-2">
+            <EnterBttn state={state} type="submit">
+              =
+            </EnterBttn>
+          </div>
         </div>
       </BttnsContainer>
     </div>
