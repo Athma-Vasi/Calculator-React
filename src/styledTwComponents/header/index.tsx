@@ -1,5 +1,5 @@
 import tw from "tailwind-styled-components";
-import { State } from "../../typings/types";
+import type { State } from "../../typings/types";
 
 type HeaderProps = {
   state: State;
@@ -12,7 +12,7 @@ const Header = tw.div<HeaderProps>`
   items-center 
   justify-between 
   px-6 
-  py-4
+  py-2  
 
   ${({
     state: {
@@ -20,10 +20,10 @@ const Header = tw.div<HeaderProps>`
     },
   }) =>
     $theme === "theme1"
-      ? "text-myWhite1Text"
+      ? "bg-myBlue1MainBg text-myWhite1Text"
       : $theme === "theme2"
-      ? "text-myDarkYellow2Text"
-      : "text-myLtYellow3Text"}
+      ? "bg-myGray2MainBg text-myDarkYellow2Text"
+      : "bg-myDarkViolet3MainBg text-myLtYellow3Text"}
 
 
 `;

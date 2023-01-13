@@ -4,6 +4,8 @@ import Calculator from "../components/calculator";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { Header } from "../styledTwComponents/header";
 import { MainWrapper } from "../styledTwComponents/mainWrapper";
+import { ThemeSwitch } from "../styledTwComponents/themeSwitch";
+import { ThemeSwitchBg } from "../styledTwComponents/themeSwitchBg";
 import type { Action, Dispatch, State } from "../typings/types";
 
 const Home: NextPage = () => {
@@ -13,7 +15,7 @@ const Home: NextPage = () => {
       history: [],
     },
     themeState: {
-      $theme: "theme2",
+      $theme: "theme3",
     },
   };
 
@@ -42,13 +44,26 @@ const Home: NextPage = () => {
   })();
 
   return (
-    <MainWrapper windowSize={windowSize}>
+    <MainWrapper state={state} windowSize={windowSize}>
       {/* left padding empty div */}
       <div className="col-start-1 col-end-2 row-start-1 row-end-4 outline-dotted"></div>
 
       <div className="col-span-1 row-start-2 row-end-3 grid grid-rows-[7] outline-dashed">
         <Header state={state}>
           <h1 className="text-4xl font-bold">calc</h1>
+          {/* theme */}
+          <div className="flex flex-col outline-dotted">
+            {/* theme nums */}
+            <div className="flex w-full flex-row items-center justify-between gap-x-4 px-3 outline-dashed ">
+              <p>1</p>
+              <p>2</p>
+              <p>3</p>
+            </div>
+            {/* theme switch */}
+            <ThemeSwitchBg state={state}>
+              <ThemeSwitch state={state}></ThemeSwitch>
+            </ThemeSwitchBg>
+          </div>
         </Header>
 
         <div className="row-span-6">
