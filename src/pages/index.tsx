@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import { useReducer } from "react";
 import Calculator from "../components/calculator";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { Header } from "../styledTwComponents/header";
 import { MainWrapper } from "../styledTwComponents/mainWrapper";
 import type { Action, Dispatch, State } from "../typings/types";
 
@@ -46,9 +47,10 @@ const Home: NextPage = () => {
       <div className="col-start-1 col-end-2 row-start-1 row-end-4 outline-dotted"></div>
 
       <div className="col-span-1 row-start-2 row-end-3 grid grid-rows-[7] outline-dashed">
-        <div className="row-span-1 flex flex-row items-center justify-between px-6 py-4 outline-dotted">
+        <Header state={state}>
           <h1 className="text-4xl font-bold">calc</h1>
-        </div>
+        </Header>
+
         <div className="row-span-6">
           <Calculator state={state} action={action} dispatch={dispatch} />
         </div>
