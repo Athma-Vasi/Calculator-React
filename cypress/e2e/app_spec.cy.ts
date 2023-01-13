@@ -1,6 +1,6 @@
 import { mount } from "cypress/react18";
 
-describe("Theme Switching", () => {
+describe("E2E User Actions", () => {
   it("should have switch in first position at initial visit", () => {
     cy.visit("http://localhost:3000/");
 
@@ -85,5 +85,36 @@ describe("Display decimal", () => {
     //should not display decimal twice after two clicks
     cy.get("[data-cy='bttn-decimal']").click();
     cy.get("[data-cy='display']").should("not.contain", "..");
+  });
+});
+
+describe("Toggle minus symbol", () => {
+  it("toggles minus symbol upon clicks", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should display '-' after first click
+    cy.get("[data-cy='bttn-plusMinus']").click();
+    cy.get("[data-cy='display']").should("contain.text", "-");
+
+    //should not display '-' after second click
+    cy.get("[data-cy='bttn-plusMinus']").click();
+    cy.get("[data-cy='display']").should("not.contain.text", "-");
+
+    //should correctly toggle minus symbol with numbers present
+    for (let i = 0; i < 5; i += 1) cy.get("[data-cy='bttn-3']").click();
+    cy.get("[data-cy='bttn-plusMinus']").click();
+    cy.get("[data-cy='display']").should("contain.text", "-");
+    cy.get("[data-cy='bttn-plusMinus']").click();
+    cy.get("[data-cy='display']").should("not.contain.text", "-");
+  });
+});
+
+describe("Clear screen", () => {
+  it("should clear screen upon click", () => {
+    cy.visit("http://localhost:3000/");
+
+    for (let i = 0; i < 5; i += 1) cy.get("[data-cy='bttn-5']").click();
+    cy.get("[data-cy='bttn-clear']").click();
+    cy.get("[data-cy='display']").should("be.empty");
   });
 });

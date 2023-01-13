@@ -20,7 +20,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
     const number = event.currentTarget.value;
-    setOperand((prev) => `${prev}${number}`);
+    if (operand.length < 13) setOperand((prev) => `${prev}${number}`);
   }
 
   function handleDecimalBttnClick(
@@ -28,6 +28,22 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   ) {
     const value = event.currentTarget.value;
     if (!operand.includes(".")) setOperand((prev) => `${prev}${value}`);
+  }
+
+  function handleToggleMinusClick(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    if (operand.includes("-")) {
+      const currentValue = operand;
+      const newValue = currentValue.replace("-", "");
+      setOperand(newValue);
+    } else setOperand((prev) => `-${prev}`);
+  }
+
+  function handleClearBttnClick(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    setOperand("");
   }
 
   return (
@@ -153,7 +169,13 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
           >
             0
           </OperandBttn>
-          <OperandBttn state={state}>+/-</OperandBttn>
+          <OperandBttn
+            state={state}
+            data-cy="bttn-plusMinus"
+            onClick={handleToggleMinusClick}
+          >
+            +/-
+          </OperandBttn>
           <OperatorBttn state={state}>X</OperatorBttn>
         </div>
 
@@ -165,7 +187,12 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
             </EnterBttn>
           </div>
 
-          <OperatorBttn state={state} className="col-span-1 text-base">
+          <OperatorBttn
+            state={state}
+            data-cy="bttn-clear"
+            className="col-span-1 text-base"
+            onClick={handleClearBttnClick}
+          >
             CLEAR
           </OperatorBttn>
           <OperatorBttn state={state} className="col-span-1">
