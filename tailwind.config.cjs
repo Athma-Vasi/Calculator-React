@@ -47,17 +47,31 @@ module.exports = {
 
         //keys
         myDarkViolet3KeyBg: "hsl(281, 89%, 26%)",
-        myMagenta3KeyShadowBg: "hsl(285, 91%, 52%)",
+        myVividMagenta3KeyShadowBg: "hsl(285, 91%, 52%)",
         myCyan3KeyToggleBg: "hsl(176, 100%, 44%)",
         myCyan3KeyShadowBg: "hsl(177, 92%, 70%)",
-        myDarkViolet3KeyBg: "hsl(268, 47%, 21%)",
-        myMagenta3KeyShadow: "hsl(290, 70%, 36%)",
+        myVeryDarkViolet3KeyBg: "hsl(268, 47%, 21%)",
+        myDarkMagenta3KeyShadow: "hsl(290, 70%, 36%)",
 
         //text
         myLtYellow3Text: "hsl(52, 100%, 62%)",
         myDarkBlue3Text: "hsl(198, 20%, 13%)",
         myWhite3Text: "hsl(0, 0%, 100%)",
       },
+      gridTemplateColumns: {
+        smWrapper: "11.80426fr 76.39148fr 11.80426fr",
+        mdWrapper: "19.1fr 61.8fr 19.1fr",
+        lgWrapper: "30.90178fr 38.19459fr 30.90178fr",
+      },
+      gridTemplateRows: {
+        mdWrapper: "11.80426fr 76.39148fr 11.80426fr",
+        lgWrapper: "19.1fr 61.8fr 19.1fr",
+      },
+    },
+    screens: {
+      sm: "768px",
+      md: "1060px",
+      lg: "1440px",
     },
     fontFamily: {
       spartan: ["League Spartan"],

@@ -1,8 +1,9 @@
-import { initial } from "cypress/types/lodash";
 import { type NextPage } from "next";
 import { useReducer } from "react";
 import Calculator from "../components/calculator";
-import { Dispatch, State } from "../typings/types";
+import { useWindowSize } from "../hooks/useWindowSize";
+import { MainWrapper } from "../styledTwComponents/mainWrapper";
+import type { Action, Dispatch, State } from "../typings/types";
 
 const Home: NextPage = () => {
   const initialState: State = {
@@ -11,11 +12,11 @@ const Home: NextPage = () => {
       history: [],
     },
     themeState: {
-      theme: "theme1",
+      $theme: "theme1",
     },
   };
 
-  const action = {
+  const action: Action = {
     switchToTheme1: "switchToTheme1",
     switchToTheme2: "switchToTheme2",
     switchToTheme3: "switchToTheme3",
@@ -29,10 +30,25 @@ const Home: NextPage = () => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const windowDims = useWindowSize();
+  const windowSize = (function () {
+    const { width = 0, height = 0 } = windowDims;
+
+    return {
+      width,
+      height,
+    };
+  })();
+
   return (
-    <div className="h-screen w-screen">
-      <Calculator state={state} action={action} dispatch={dispatch} />
-    </div>
+    <MainWrapper windowSize={windowSize}>
+      <div className="col-start-1 col-end-2 row-start-1 row-end-4 outline-dotted"></div>
+
+      <div className="col-span-1 row-start-2 row-end-3 outline-dashed">
+        <Calculator state={state} action={action} dispatch={dispatch} />
+      </div>
+      <div className="col-start-3 col-end-4 row-start-1 row-end-4 outline-double"></div>
+    </MainWrapper>
   );
 };
 
