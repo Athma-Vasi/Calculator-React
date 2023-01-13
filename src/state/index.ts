@@ -6,7 +6,7 @@ const initialState: State = {
     history: [],
   },
   themeState: {
-    $theme: "theme3",
+    $theme: "theme1",
   },
 };
 
