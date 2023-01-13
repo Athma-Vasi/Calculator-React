@@ -5,7 +5,7 @@ type MainWrapperProps = {
   state: State;
   // action: Action;
   // dispatch: React.Dispatch<Dispatch>;
-  windowSize: {
+  windowsize: {
     width: number;
     height: number;
   };
@@ -16,7 +16,7 @@ const MainWrapper = tw.div<MainWrapperProps>`
   h-screen
   w-screen
 
-  ${({ windowSize: { width, height } }) =>
+  ${({ windowsize: { width, height } }) =>
     width < 768
       ? `grid-cols-smWrapper grid-rows-smWrapper`
       : width < 1060

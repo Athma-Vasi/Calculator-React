@@ -1,40 +1,19 @@
 import { type NextPage } from "next";
-import { useReducer } from "react";
+import React, { useReducer } from "react";
 import Calculator from "../components/calculator";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { action, initialState, reducer } from "../state";
+
 import { Header } from "../styledTwComponents/header";
 import { MainWrapper } from "../styledTwComponents/mainWrapper";
 import { ThemeSwitch } from "../styledTwComponents/themeSwitch";
 import { ThemeSwitchBg } from "../styledTwComponents/themeSwitchBg";
-import type { Action, Dispatch, State } from "../typings/types";
 
 const Home: NextPage = () => {
-  const initialState: State = {
-    appState: {
-      advanced: false,
-      history: [],
-    },
-    themeState: {
-      $theme: "theme3",
-    },
-  };
-
-  const action: Action = {
-    switchToTheme1: "switchToTheme1",
-    switchToTheme2: "switchToTheme2",
-    switchToTheme3: "switchToTheme3",
-  };
-
-  function reducer(state: State, action: Dispatch) {
-    const clone = structuredClone(state);
-
-    return clone;
-  }
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const windowDims = useWindowSize();
-  const windowSize = (function () {
+  const windowsize = (function () {
     const { width = 0, height = 0 } = windowDims;
 
     return {
@@ -43,25 +22,51 @@ const Home: NextPage = () => {
     };
   })();
 
-  return (
-    <MainWrapper state={state} windowSize={windowSize}>
-      {/* left padding empty div */}
-      <div className="col-start-1 col-end-2 row-start-1 row-end-4 outline-dotted"></div>
+  function handleThemeSwitchClick(
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) {
+    const currentTheme = state.themeState.$theme;
+    const newTheme =
+      currentTheme === "theme1"
+        ? "theme2"
+        : currentTheme === "theme2"
+        ? "theme3"
+        : "theme1";
 
-      <div className="col-span-1 row-start-2 row-end-3 grid grid-rows-[7] outline-dashed">
+    dispatch({
+      type: action.switchTheme,
+      payload: {
+        appState: state.appState,
+        themeState: {
+          $theme: newTheme,
+        },
+      },
+    });
+  }
+
+  return (
+    <MainWrapper state={state} windowsize={windowsize}>
+      {/* left padding empty div */}
+      <div className="col-span-1 row-start-1 row-end-4 "></div>
+
+      <div className="col-span-1 row-start-2 row-end-3 grid grid-rows-[7] ">
         <Header state={state}>
           <h1 className="text-4xl font-bold">calc</h1>
           {/* theme */}
-          <div className="flex flex-col outline-dotted">
+          <div className="flex flex-col ">
             {/* theme nums */}
-            <div className="flex w-full flex-row items-center justify-between gap-x-4 px-3 outline-dashed ">
+            <div className="flex w-full flex-row items-center justify-between gap-x-4 px-3  ">
               <p>1</p>
               <p>2</p>
               <p>3</p>
             </div>
             {/* theme switch */}
             <ThemeSwitchBg state={state}>
-              <ThemeSwitch state={state}></ThemeSwitch>
+              <ThemeSwitch
+                state={state}
+                onClick={handleThemeSwitchClick}
+                data-cy="theme-switch"
+              ></ThemeSwitch>
             </ThemeSwitchBg>
           </div>
         </Header>
@@ -72,7 +77,7 @@ const Home: NextPage = () => {
       </div>
 
       {/* right padding empty div */}
-      <div className="col-start-3 col-end-4 row-start-1 row-end-4 outline-double"></div>
+      <div className="col-span-1 row-start-1 row-end-4 "></div>
     </MainWrapper>
   );
 };

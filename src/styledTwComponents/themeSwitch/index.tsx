@@ -6,26 +6,26 @@ type ThemeSwitchProps = {
 };
 
 const ThemeSwitch = tw.div<ThemeSwitchProps>`
-absolute
-rounded-full
-cursor-pointer
+  absolute
+  rounded-full
+  cursor-pointer
 
-mt-1
-mx-2
-top-0
-w-4
-h-4
+  mt-1
+  mx-2
+  top-0
+  w-4
+  h-4
 
-${({
-  state: {
-    themeState: { $theme },
-  },
-}) =>
-  $theme === "theme1"
-    ? "left-0 bg-myRed1KeyToggleBg"
-    : $theme === "theme2"
-    ? "left-[22px] bg-myLtOrange2KeyToggleBg"
-    : "right-0 bg-myCyan3KeyToggleBg"}
+  ${({
+    state: {
+      themeState: { $theme },
+    },
+  }) =>
+    $theme === "theme1"
+      ? "left-0 bg-myRed1KeyToggleBg"
+      : $theme === "theme2"
+      ? "left-[22px] bg-myLtOrange2KeyToggleBg"
+      : "right-0 bg-myCyan3KeyToggleBg"}
 
 
 `;

@@ -15,8 +15,6 @@ const EnterBttn = tw.button<EnterBttnProps>`
   w-full 
   h-full
 
-  
-
   ${({
     state: {
       themeState: { $theme },

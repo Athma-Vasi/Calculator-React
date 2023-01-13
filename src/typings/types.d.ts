@@ -14,7 +14,5 @@ export type Dispatch = {
 };
 
 export type Action = {
-  switchToTheme1: "switchToTheme1";
-  switchToTheme2: "switchToTheme2";
-  switchToTheme3: "switchToTheme3";
+  switchTheme: "switchTheme";
 };
