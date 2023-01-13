@@ -73,3 +73,17 @@ describe("Display Numbers", () => {
     cy.get("[data-cy='display']").should("contain.text", "7894561230");
   });
 });
+
+describe("Display decimal", () => {
+  it("displays decimal only once upon click", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should display decimal after click
+    cy.get("[data-cy='bttn-decimal']").click();
+    cy.get("[data-cy='display']").should("contain.text", ".");
+
+    //should not display decimal twice after two clicks
+    cy.get("[data-cy='bttn-decimal']").click();
+    cy.get("[data-cy='display']").should("not.contain", "..");
+  });
+});
