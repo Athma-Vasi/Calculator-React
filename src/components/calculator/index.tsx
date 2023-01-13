@@ -1,5 +1,7 @@
 import React from "react";
 import { BttnsContainer } from "../../styledTwComponents/bttnsContainer";
+import { Display } from "../../styledTwComponents/display";
+import { History } from "../../styledTwComponents/history";
 import { OperandBttn } from "../../styledTwComponents/operandBttn";
 import { OperatorBttn } from "../../styledTwComponents/operatorBttn";
 import type { Dispatch, State } from "../../typings/types";
@@ -12,16 +14,12 @@ type CalculatorProps = {
 
 function Calculator({ state, action, dispatch }: CalculatorProps) {
   return (
-    <div className="grid h-full w-full grid-rows-6 p-6 ">
+    <div className="grid h-full w-full grid-rows-6 gap-y-5 p-6">
       {/* history */}
-      <div className="row-span-1">
-        <h3>History</h3>
-      </div>
+      <History state={state}>History</History>
 
       {/* display */}
-      <div className="row-span-1">
-        <h2>Display</h2>
-      </div>
+      <Display state={state}>Display</Display>
 
       {/* buttons */}
       <BttnsContainer state={state}>

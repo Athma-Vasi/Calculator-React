@@ -45,8 +45,13 @@ const Home: NextPage = () => {
       {/* left padding empty div */}
       <div className="col-start-1 col-end-2 row-start-1 row-end-4 outline-dotted"></div>
 
-      <div className="col-span-1 row-start-2 row-end-3 outline-dashed">
-        <Calculator state={state} action={action} dispatch={dispatch} />
+      <div className="col-span-1 row-start-2 row-end-3 grid grid-rows-[7] outline-dashed">
+        <div className="row-span-1 flex flex-row items-center justify-between px-6 py-4 outline-dotted">
+          <h1 className="text-4xl font-bold">calc</h1>
+        </div>
+        <div className="row-span-6">
+          <Calculator state={state} action={action} dispatch={dispatch} />
+        </div>
       </div>
 
       {/* right padding empty div */}

@@ -18,9 +18,9 @@ w-screen
 
 ${({ windowSize: { width, height } }) =>
   width < 768
-    ? "grid-cols-smWrapper grid-rows-mdWrapper"
+    ? "grid-cols-smWrapper grid-rows-smWrapper"
     : width < 1060
-    ? "grid-cols-mdWrapper grid-rows-mdWrapper"
+    ? "grid-cols-mdWrapper grid-rows-smWrapper"
     : "grid-cols-lgWrapper grid-rows-smWrapper"}
 
 
