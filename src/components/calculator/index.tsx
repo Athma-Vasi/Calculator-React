@@ -46,6 +46,15 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     setOperand("");
   }
 
+  function handleBackspaceBttnClick(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    const currentValue = operand;
+    const newValue =
+      currentValue.at(-1) === "-" ? "-" : currentValue.slice(0, -1);
+    setOperand(newValue);
+  }
+
   return (
     <div className="grid h-full w-full grid-rows-6 gap-y-5">
       {/* history */}
@@ -195,8 +204,13 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
           >
             CLEAR
           </OperatorBttn>
-          <OperatorBttn state={state} className="col-span-1">
-            DEL
+          <OperatorBttn
+            state={state}
+            data-cy="bttn-backspace"
+            className="col-span-1 text-2xl"
+            onClick={handleBackspaceBttnClick}
+          >
+            ⬅
           </OperatorBttn>
         </div>
       </BttnsContainer>

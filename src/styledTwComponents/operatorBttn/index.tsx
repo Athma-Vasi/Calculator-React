@@ -12,6 +12,7 @@ const OperatorBttn = tw.button<OperatorBttnProps>`
   tracking-wide
   rounded-lg
   shadow-md 
+  truncate
 
   ${({
     state: {

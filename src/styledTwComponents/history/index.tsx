@@ -14,7 +14,8 @@ const History = tw.div<HistoryProps>`
   justify-end
   pr-4
 
-  text-4xl    
+  text-4xl
+  truncate    
   
   ${({
     state: {

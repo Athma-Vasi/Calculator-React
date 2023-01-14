@@ -1,6 +1,6 @@
 import { mount } from "cypress/react18";
 
-describe("E2E User Actions", () => {
+describe("Theme switching", () => {
   it("should have switch in first position at initial visit", () => {
     cy.visit("http://localhost:3000/");
 
@@ -113,8 +113,27 @@ describe("Clear screen", () => {
   it("should clear screen upon click", () => {
     cy.visit("http://localhost:3000/");
 
+    //should clear display screen of five '5's after click
     for (let i = 0; i < 5; i += 1) cy.get("[data-cy='bttn-5']").click();
     cy.get("[data-cy='bttn-clear']").click();
     cy.get("[data-cy='display']").should("be.empty");
+  });
+});
+
+describe("Backspace functionality", () => {
+  it("should delete last char entered", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should remove last entered char when backspace bttn is clicked
+    for (let i = 0; i < 7; i += 1) cy.get("[data-cy='bttn-7']").click();
+    cy.get("[data-cy='bttn-backspace']").click();
+    cy.get("[data-cy='display']").should("contain.text", "777777");
+  });
+
+  it("should not delete '-' if it's the only char present", () => {
+    cy.visit("http://localhost:3000/");
+
+    cy.get("[data-cy='bttn-plusMinus']").click();
+    cy.get("[data-cy='display']").should("contain.text", "-");
   });
 });

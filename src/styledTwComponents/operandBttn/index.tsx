@@ -10,7 +10,8 @@ const OperandBttn = tw.button<OperandBttnProps>`
   font-bold
   text-2xl
   rounded-lg
-  shadow-md  
+  shadow-md
+  truncate  
   
   ${({
     state: {
