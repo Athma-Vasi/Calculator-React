@@ -32,14 +32,12 @@ const Home: NextPage = () => {
         : currentTheme === "theme2"
         ? "theme3"
         : "theme1";
+    state.themeState.$theme = newTheme;
 
     dispatch({
-      type: action.switchTheme,
+      type: action.theme.switchTheme,
       payload: {
-        appState: state.appState,
-        themeState: {
-          $theme: newTheme,
-        },
+        state,
       },
     });
   }

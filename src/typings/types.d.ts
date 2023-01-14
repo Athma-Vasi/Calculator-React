@@ -1,7 +1,8 @@
 export type State = {
   appState: {
-    advanced?: boolean;
-    history: [];
+    operand: string;
+    operator: Operator | "";
+    expressions: string[];
   };
   themeState: {
     $theme: "theme1" | "theme2" | "theme3";
@@ -10,9 +11,20 @@ export type State = {
 
 export type Dispatch = {
   type: string;
-  payload: State;
+  payload: {
+    state: State;
+  };
 };
 
 export type Action = {
-  switchTheme: "switchTheme";
+  app: {
+    setOperand: "setOperand";
+    setOperator: "setOperator";
+    setExpression: "setExpression";
+  };
+  theme: {
+    switchTheme: "switchTheme";
+  };
 };
+
+export type Operator = "/" | "+" | "-" | "*";
