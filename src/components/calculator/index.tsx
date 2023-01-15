@@ -188,16 +188,20 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
 
         switch (operator) {
           case "/": {
-            result =
-              resultDigitsAfterDecimal === 0
-                ? (prevOperandNum / nextOperandNum).toPrecision(
-                    largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                  )
-                : (prevOperandNum / nextOperandNum).toFixed(
-                    resultDigitsAfterDecimal < 12
-                      ? resultDigitsAfterDecimal
-                      : 12
-                  );
+            nextOperandNum === 0
+              ? (result = "Error: Divide by 0")
+              : (result =
+                  resultDigitsAfterDecimal === 0
+                    ? (prevOperandNum / nextOperandNum).toPrecision(
+                        largerLengthOfOperands < 12
+                          ? largerLengthOfOperands
+                          : 12
+                      )
+                    : (prevOperandNum / nextOperandNum).toFixed(
+                        resultDigitsAfterDecimal < 12
+                          ? resultDigitsAfterDecimal
+                          : 12
+                      ));
             break;
           }
           case "+": {
