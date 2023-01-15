@@ -74,9 +74,24 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     // setOperand("");
     state.appState.operand = "";
-
     dispatch({
       type: action.app.setOperand,
+      payload: {
+        state,
+      },
+    });
+
+    state.appState.answer = "";
+    dispatch({
+      type: action.app.setAnswer,
+      payload: {
+        state,
+      },
+    });
+
+    state.appState.expressions = [];
+    dispatch({
+      type: action.app.setExpression,
       payload: {
         state,
       },
@@ -106,6 +121,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     if (state.appState.operand.length < 13) {
       const newValue = `${state.appState.operand}${number}`;
 
+      //allows operations after division by zero to proceed properly
       if (state.appState.expressions[0] === "Error: Divide by 0") {
         state.appState.expressions = [];
         dispatch({

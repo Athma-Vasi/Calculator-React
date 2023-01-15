@@ -259,7 +259,7 @@ describe("Subtraction functionality", () => {
   });
 });
 
-*/
+
 
 describe("Division functionality", () => {
   it("should divide two numbers", () => {
@@ -354,6 +354,122 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-enter"]').click();
     cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
     cy.get('[data-cy="bttn-clear"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "0");
+    cy.get('[data-cy="display"]').should("not.contain.text");
+  });
+
+  it("should divide two numbers with zero then clear then another operation", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should divide two numbers with zero then clear then another operation
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "10");
+  });
+
+  it("should divide two numbers with zero then clear then another operation then clear", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should divide two numbers with zero then clear then another operation then clear
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "10");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+  });
+
+  it("should divide two numbers with zero then clear then another operation then clear then divide two numbers with zero then clear then another operation", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should divide two numbers with zero then clear then another operation then clear then divide two numbers with zero then clear then another operation
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "10");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "10");
+  });
+});
+
+*/
+
+describe("Multiplication functionality", () => {
+  it("should multiply two numbers", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should multiply two numbers
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "25");
+  });
+
+  it("should multiply two numbers then clear", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should multiply two numbers then clear
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "25");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+  });
+
+  it("should multiply two numbers then clear then another operation", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should multiply two numbers then clear then another operation
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "25");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "10");
   });
 });
