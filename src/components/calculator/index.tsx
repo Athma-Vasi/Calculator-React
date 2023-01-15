@@ -7,7 +7,6 @@ import { EnterBttn } from "../../styledTwComponents/enterBttn";
 import { History } from "../../styledTwComponents/history";
 import { OperandBttn } from "../../styledTwComponents/operandBttn";
 import { OperatorBttn } from "../../styledTwComponents/operatorBttn";
-import { stat } from "fs";
 
 type CalculatorProps = {
   state: State;
@@ -106,6 +105,16 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     const number = event.currentTarget.value;
     if (state.appState.operand.length < 13) {
       const newValue = `${state.appState.operand}${number}`;
+
+      if (state.appState.expressions[0] === "Error: Divide by 0") {
+        state.appState.expressions = [];
+        dispatch({
+          type: action.app.setExpression,
+          payload: {
+            state,
+          },
+        });
+      }
 
       //when operand is clicked right after an answer is displayed, resets answer to empty to allow operand to be displayed on screen
       state.appState.answer = "";

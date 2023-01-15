@@ -326,4 +326,34 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-enter"]').click();
     cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
   });
+
+  //test for divide by zero then another operation
+  it("should divide two numbers with zero then another operation", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should divide two numbers with zero then another operation
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "10");
+  });
+
+  it("should divide two numbers with zero then clear", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should divide two numbers with zero then clear
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "0");
+  });
 });
