@@ -165,135 +165,205 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
       },
     });
 
-    const operand_ = state.appState.operand;
-    state.appState.expressions.push(operand_);
-    state.appState.expressions.push(operator_);
-    dispatch({
-      type: action.app.setExpression,
-      payload: {
-        state,
-      },
-    });
+    //prevents operator from being added to expressions array if operand contains only decimal
+    if (state.appState.operand === ".") {
+      state.appState.operand = "";
+      dispatch({
+        type: action.app.setOperand,
+        payload: {
+          state,
+        },
+      });
 
-    state.appState.operand = "";
-    dispatch({
-      type: action.app.setOperand,
-      payload: {
-        state,
-      },
-    });
+      state.appState.operator = "";
+      dispatch({
+        type: action.app.setOperator,
+        payload: {
+          state,
+        },
+      });
 
-    if (state.appState.expressions.length > 2) {
-      const [prevOperandStr, operator, nextOperandStr] =
-        state.appState.expressions.slice(0, 3) as [string, Operator, string];
+      state.appState.expressions = [];
+      dispatch({
+        type: action.app.setExpression,
+        payload: {
+          state,
+        },
+      });
+    }
+    //
+    else {
+      const operand_ = state.appState.operand;
+      state.appState.expressions.push(operand_);
+      state.appState.expressions.push(operator_);
+      dispatch({
+        type: action.app.setExpression,
+        payload: {
+          state,
+        },
+      });
 
-      {
-        const largerLengthOfOperands =
-          prevOperandStr.length > nextOperandStr.length
-            ? prevOperandStr.length + 1
-            : nextOperandStr.length + 1;
+      state.appState.operand = "";
+      dispatch({
+        type: action.app.setOperand,
+        payload: {
+          state,
+        },
+      });
 
-        const prevOperandDigitsAfterDecimal = prevOperandStr.includes(".")
-          ? (prevOperandStr.split(".")[1]?.length as number)
-          : (0 as number);
-
-        const nextOperandDigitsAfterDecimal = nextOperandStr.includes(".")
-          ? (nextOperandStr.split(".")[1]?.length as number)
-          : (0 as number);
-
-        //choose the smallest value of digits after decimal
-        const resultDigitsAfterDecimal =
-          prevOperandDigitsAfterDecimal > nextOperandDigitsAfterDecimal
-            ? nextOperandDigitsAfterDecimal
-            : prevOperandDigitsAfterDecimal;
-
-        let result = "";
-        const prevOperandNum = parseFloat(prevOperandStr);
-        const nextOperandNum = parseFloat(nextOperandStr);
-
-        switch (operator) {
-          case "/": {
-            nextOperandNum === 0
-              ? (result = "Error: Divide by 0")
-              : (result =
-                  resultDigitsAfterDecimal === 0
-                    ? (prevOperandNum / nextOperandNum).toPrecision(
-                        largerLengthOfOperands < 12
-                          ? largerLengthOfOperands
-                          : 12
-                      )
-                    : (prevOperandNum / nextOperandNum).toFixed(
-                        resultDigitsAfterDecimal < 12
-                          ? resultDigitsAfterDecimal
-                          : 12
-                      ));
-            break;
-          }
-          case "+": {
-            result =
-              resultDigitsAfterDecimal === 0
-                ? (prevOperandNum + nextOperandNum).toPrecision(
-                    largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                  )
-                : (prevOperandNum + nextOperandNum).toFixed(
-                    resultDigitsAfterDecimal < 12
-                      ? resultDigitsAfterDecimal
-                      : 12
-                  );
-            break;
-          }
-          case "-": {
-            result =
-              resultDigitsAfterDecimal === 0
-                ? (prevOperandNum - nextOperandNum).toPrecision(
-                    largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                  )
-                : (prevOperandNum - nextOperandNum).toFixed(
-                    resultDigitsAfterDecimal < 12
-                      ? resultDigitsAfterDecimal
-                      : 12
-                  );
-            break;
-          }
-          case "*": {
-            result =
-              resultDigitsAfterDecimal === 0
-                ? (prevOperandNum * nextOperandNum).toPrecision(
-                    largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                  )
-                : (prevOperandNum * nextOperandNum).toFixed(
-                    resultDigitsAfterDecimal < 12
-                      ? resultDigitsAfterDecimal
-                      : 12
-                  );
-            break;
-          }
-          case "=": {
-            result = prevOperandStr;
-            break;
-          }
-          default:
-            result = "0";
-            break;
-        }
-        //after switch block
-        state.appState.answer = result;
+      //handles case where enter is clicked after only one operand is entered
+      if (
+        state.appState.expressions.length === 2 &&
+        state.appState.expressions[1] === "="
+      ) {
+        state.appState.answer = state.appState.expressions[0] ?? "";
         dispatch({
           type: action.app.setAnswer,
           payload: {
             state,
           },
         });
+      }
 
-        for (let i = 0; i < 3; i += 1) state.appState.expressions.shift();
-        state.appState.expressions.unshift(result);
-
+      //if only plusMinus is clicked, then operator is clicked, expression is set to empty array
+      if (
+        state.appState.expressions.length === 2 &&
+        state.appState.expressions[0] === "-"
+      ) {
+        state.appState.expressions = [];
         dispatch({
           type: action.app.setExpression,
           payload: {
             state,
           },
         });
+      }
+
+      if (
+        state.appState.expressions.length === 2 &&
+        state.appState.expressions[0] === "NaN"
+      ) {
+        state.appState.expressions = [];
+        dispatch({
+          type: action.app.setExpression,
+          payload: {
+            state,
+          },
+        });
+      }
+
+      if (state.appState.expressions.length > 2) {
+        const [prevOperandStr, operator, nextOperandStr] =
+          state.appState.expressions.slice(0, 3) as [string, Operator, string];
+
+        {
+          const largerLengthOfOperands =
+            prevOperandStr.length > nextOperandStr.length
+              ? prevOperandStr.length + 1
+              : nextOperandStr.length + 1;
+
+          const prevOperandDigitsAfterDecimal = prevOperandStr.includes(".")
+            ? (prevOperandStr.split(".")[1]?.length as number)
+            : (0 as number);
+
+          const nextOperandDigitsAfterDecimal = nextOperandStr.includes(".")
+            ? (nextOperandStr.split(".")[1]?.length as number)
+            : (0 as number);
+
+          //choose the smallest value of digits after decimal
+          const resultDigitsAfterDecimal =
+            prevOperandDigitsAfterDecimal > nextOperandDigitsAfterDecimal
+              ? nextOperandDigitsAfterDecimal
+              : prevOperandDigitsAfterDecimal;
+
+          let result = "";
+          const prevOperandNum = parseFloat(prevOperandStr);
+          const nextOperandNum = parseFloat(nextOperandStr);
+
+          switch (operator) {
+            case "/": {
+              nextOperandNum === 0
+                ? (result = "Error: Divide by 0")
+                : (result =
+                    resultDigitsAfterDecimal === 0
+                      ? (prevOperandNum / nextOperandNum).toPrecision(
+                          largerLengthOfOperands < 12
+                            ? largerLengthOfOperands
+                            : 12
+                        )
+                      : (prevOperandNum / nextOperandNum).toFixed(
+                          resultDigitsAfterDecimal < 12
+                            ? resultDigitsAfterDecimal
+                            : 12
+                        ));
+              break;
+            }
+            case "+": {
+              result =
+                resultDigitsAfterDecimal === 0
+                  ? (prevOperandNum + nextOperandNum).toPrecision(
+                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
+                    )
+                  : (prevOperandNum + nextOperandNum).toFixed(
+                      resultDigitsAfterDecimal < 12
+                        ? resultDigitsAfterDecimal
+                        : 12
+                    );
+              break;
+            }
+            case "-": {
+              result =
+                resultDigitsAfterDecimal === 0
+                  ? (prevOperandNum - nextOperandNum).toPrecision(
+                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
+                    )
+                  : (prevOperandNum - nextOperandNum).toFixed(
+                      resultDigitsAfterDecimal < 12
+                        ? resultDigitsAfterDecimal
+                        : 12
+                    );
+              break;
+            }
+            case "*": {
+              result =
+                resultDigitsAfterDecimal === 0
+                  ? (prevOperandNum * nextOperandNum).toPrecision(
+                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
+                    )
+                  : (prevOperandNum * nextOperandNum).toFixed(
+                      resultDigitsAfterDecimal < 12
+                        ? resultDigitsAfterDecimal
+                        : 12
+                    );
+              break;
+            }
+            case "=": {
+              result = prevOperandStr;
+              break;
+            }
+            default:
+              result = "0";
+              break;
+          }
+          //after switch block
+          state.appState.answer = result;
+          dispatch({
+            type: action.app.setAnswer,
+            payload: {
+              state,
+            },
+          });
+
+          for (let i = 0; i < 3; i += 1) state.appState.expressions.shift();
+          state.appState.expressions.unshift(result);
+
+          dispatch({
+            type: action.app.setExpression,
+            payload: {
+              state,
+            },
+          });
+        }
       }
     }
   }

@@ -428,7 +428,7 @@ describe("Division functionality", () => {
   });
 });
 
-*/
+
 
 describe("Multiplication functionality", () => {
   it("should multiply two numbers", () => {
@@ -471,5 +471,132 @@ describe("Multiplication functionality", () => {
     cy.get('[data-cy="bttn-5"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
     cy.get('[data-cy="display"]').should("contain.text", "10");
+  });
+
+  it("should multiply two numbers then clear then divide by zero then clear", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should multiply two numbers then clear then divide by zero then clear
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "25");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+  });
+
+  it("should multiply two numbers then clear then divide by zero then clear then another operation", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should multiply two numbers then clear then divide by zero then clear then another operation
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "25");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "10");
+  });
+
+  it("should multiply two numbers then clear then divide by zero then clear then another operation then clear", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should multiply two numbers then clear then divide by zero then clear then another operation then clear
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "25");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "10");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+  });
+});
+
+*/
+
+describe("Multiple operations chained together", () => {
+  it("should enter a number then backspace then enter decimal then click add then enter a number then click enter", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should enter a number then backspace then enter decimal then click add then enter a number then click enter
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-backspace"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "5.50");
+  });
+
+  it("should enter a number then backspace then enter decimal then click add then enter a number then click enter then clear", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should enter a number then backspace then enter decimal then click add then enter a number then click enter then clear
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-backspace"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-add"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "5.50");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+  });
+
+  it("should enter numbers then backspace then enter decimal then click divide then enter numbers then backspace then enter decimal then click enter then clear", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should enter numbers then backspace then enter decimal then click divide then enter numbers then backspace then enter decimal then click enter then clear
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-backspace"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-backspace"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "1.0");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
   });
 });
