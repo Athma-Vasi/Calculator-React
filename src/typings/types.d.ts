@@ -29,4 +29,4 @@ export type Action = {
   };
 };
 
-export type Operator = "/" | "+" | "-" | "*";
+export type Operator = "/" | "+" | "-" | "*" | "=";

@@ -177,11 +177,6 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
           ? (nextOperandStr.split(".")[1]?.length as number)
           : (0 as number);
 
-        console.log(
-          prevOperandDigitsAfterDecimal,
-          nextOperandDigitsAfterDecimal
-        );
-
         //choose the smallest value of digits after decimal
         const resultDigitsAfterDecimal =
           prevOperandDigitsAfterDecimal > nextOperandDigitsAfterDecimal
@@ -197,10 +192,12 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
             result =
               resultDigitsAfterDecimal === 0
                 ? (prevOperandNum / nextOperandNum).toPrecision(
-                    largerLengthOfOperands
+                    largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
                   )
                 : (prevOperandNum / nextOperandNum).toFixed(
-                    resultDigitsAfterDecimal
+                    resultDigitsAfterDecimal < 12
+                      ? resultDigitsAfterDecimal
+                      : 12
                   );
             break;
           }
@@ -208,10 +205,12 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
             result =
               resultDigitsAfterDecimal === 0
                 ? (prevOperandNum + nextOperandNum).toPrecision(
-                    largerLengthOfOperands
+                    largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
                   )
                 : (prevOperandNum + nextOperandNum).toFixed(
-                    resultDigitsAfterDecimal
+                    resultDigitsAfterDecimal < 12
+                      ? resultDigitsAfterDecimal
+                      : 12
                   );
             break;
           }
@@ -219,10 +218,12 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
             result =
               resultDigitsAfterDecimal === 0
                 ? (prevOperandNum - nextOperandNum).toPrecision(
-                    largerLengthOfOperands
+                    largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
                   )
                 : (prevOperandNum - nextOperandNum).toFixed(
-                    resultDigitsAfterDecimal
+                    resultDigitsAfterDecimal < 12
+                      ? resultDigitsAfterDecimal
+                      : 12
                   );
             break;
           }
@@ -230,13 +231,22 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
             result =
               resultDigitsAfterDecimal === 0
                 ? (prevOperandNum * nextOperandNum).toPrecision(
-                    largerLengthOfOperands
+                    largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
                   )
                 : (prevOperandNum * nextOperandNum).toFixed(
-                    resultDigitsAfterDecimal
+                    resultDigitsAfterDecimal < 12
+                      ? resultDigitsAfterDecimal
+                      : 12
                   );
             break;
           }
+          case "=": {
+            result = prevOperandStr;
+            break;
+          }
+          default:
+            result = "0";
+            break;
         }
         //after switch block
         state.appState.operand = result;
@@ -417,7 +427,11 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         {/* row 5 */}
         <div className="row-span-1 grid grid-cols-4 gap-4">
           <div className="col-span-2">
-            <EnterBttn state={state} type="submit">
+            <EnterBttn
+              state={state}
+              onClick={handleOperatorBttnClick}
+              value="="
+            >
               =
             </EnterBttn>
           </div>
@@ -445,81 +459,3 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
 }
 
 export default Calculator;
-
-/**
- function handleOperatorBttnClick(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
-    //something
-    const operator_ = event.currentTarget.value as Operator;
-    console.log("operator at start", operator_);
-    const operand_ = operand;
-    setOperator(operator_);
-
-    const clone = structuredClone(expressionArr);
-    clone.push(operand_);
-    clone.push(operator_);
-    setExpressionArr(clone);
-
-    setOperand("");
-
-    console.log("expArr before switch", expressionArr);
-
-    //start evaluating expression when there are 3 items:
-    //[operand, operator, operand]
-    if (expressionArr.length > 3) {
-      //'as' is justifiable here cuz values cannot be undefined as this block will only be entered when there are three values
-      const [prevOperandStr, currOperator, nextOperandStr] =
-        expressionArr.slice(0, 3) as [string, Operator, string];
-      console.log(prevOperandStr, currOperator, nextOperandStr);
-
-      const largerLengthOfOperands =
-        prevOperandStr.length > nextOperandStr.length
-          ? prevOperandStr.length + 1
-          : nextOperandStr.length + 1;
-
-      const prevOperandDigitsAfterDecimal = prevOperandStr.includes(".")
-        ? (prevOperandStr.split(".")[1]?.length as number)
-        : (0 as number);
-
-      const nextOperandDigitsAfterDecimal = nextOperandStr.includes(".")
-        ? (nextOperandStr.split(".")[1]?.length as number)
-        : (0 as number);
-
-      // console.log(prevOperandDigitsAfterDecimal, nextOperandDigitsAfterDecimal);
-
-      //choose the smallest value of digits after decimal
-      const resultDigitsAfterDecimal =
-        prevOperandDigitsAfterDecimal > nextOperandDigitsAfterDecimal
-          ? nextOperandDigitsAfterDecimal
-          : prevOperandDigitsAfterDecimal;
-
-      let result = "";
-      const prevOperandNum = Number(prevOperandStr);
-      const nextOperandNum = Number(nextOperandStr);
-
-      switch (currOperator) {
-        case "/": {
-          result =
-            resultDigitsAfterDecimal === 0
-              ? (prevOperandNum / nextOperandNum).toPrecision(
-                  largerLengthOfOperands
-                )
-              : (prevOperandNum / nextOperandNum).toFixed(
-                  resultDigitsAfterDecimal
-                );
-          //shift result into expressionArr after removing first 3 items
-          //clone is locally scoped here
-          const clone = structuredClone(expressionArr);
-          console.log("clone before shift", clone);
-          for (let i = 0; i < 3; i += 1) clone.shift();
-          console.log("clone after shift", clone);
-          clone.unshift(result);
-          setOperand(result);
-          setExpressionArr(clone);
-          break;
-        }
-      }
-    }
-  }
- */
