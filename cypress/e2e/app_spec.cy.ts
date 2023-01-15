@@ -137,3 +137,31 @@ describe("Backspace functionality", () => {
     cy.get("[data-cy='display']").should("contain.text", "-");
   });
 });
+
+describe("Addition functionality", () => {
+  it("should add two numbers", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should add two numbers
+    cy.get("[data-cy='bttn-5']").click();
+    cy.get("[data-cy='bttn-add']").click();
+    cy.get("[data-cy='bttn-5']").click();
+    cy.get("[data-cy='bttn-enter']").click();
+    cy.get("[data-cy='display']").should("contain.text", "10");
+  });
+
+  it("should add two numbers with decimal", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should add two numbers with decimal
+    cy.get("[data-cy='bttn-5']").click();
+    cy.get("[data-cy='bttn-decimal']").click();
+    cy.get("[data-cy='bttn-5']").click();
+    cy.get("[data-cy='bttn-add']").click();
+    cy.get("[data-cy='bttn-5']").click();
+    cy.get("[data-cy='bttn-decimal']").click();
+    cy.get("[data-cy='bttn-5']").click();
+    cy.get("[data-cy='bttn-enter']").click();
+    cy.get("[data-cy='display']").should("contain.text", "11");
+  });
+});

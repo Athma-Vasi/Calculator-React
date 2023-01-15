@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
+import type { Action, Dispatch, Operator, State } from "../../typings/types";
+
 import { BttnsContainer } from "../../styledTwComponents/bttnsContainer";
 import { Display } from "../../styledTwComponents/display";
 import { EnterBttn } from "../../styledTwComponents/enterBttn";
 import { History } from "../../styledTwComponents/history";
 import { OperandBttn } from "../../styledTwComponents/operandBttn";
 import { OperatorBttn } from "../../styledTwComponents/operatorBttn";
-import type { Action, Dispatch, Operator, State } from "../../typings/types";
+import { stat } from "fs";
 
 type CalculatorProps = {
   state: State;
@@ -21,6 +23,8 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   function handleDecimalBttnClick(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
+    //fix the bug where nextOperand is not accepting a value after decimal
+
     const value = event.currentTarget.value;
     if (!state.appState.operand.includes(".")) {
       // setOperand((prev) => `${prev}${value}`);
@@ -36,9 +40,8 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     }
   }
 
-  function handleToggleMinusClick(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  function handleToggleMinusClick() {
+    // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     const currentValue = state.appState.operand;
 
     if (state.appState.operand.includes("-")) {
@@ -68,9 +71,8 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     }
   }
 
-  function handleClearBttnClick(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  function handleClearBttnClick() {
+    // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     // setOperand("");
     state.appState.operand = "";
 
@@ -82,9 +84,8 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     });
   }
 
-  function handleBackspaceBttnClick(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  function handleBackspaceBttnClick() {
+    // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     const currentValue = state.appState.operand;
     const newValue =
       currentValue.at(-1) === "-" ? "-" : currentValue.slice(0, -1);
@@ -102,23 +103,21 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   function handleOperandBttnClick(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
-    //clears the display if the last expression was an operator
-    if (state.appState.expressions.length === 2) {
-      state.appState.operand = "";
+    const number = event.currentTarget.value;
+    if (state.appState.operand.length < 13) {
+      const newValue = `${state.appState.operand}${number}`;
+
+      //when operand is clicked right after an answer is displayed, resets answer to empty to allow operand to be displayed on screen
+      state.appState.answer = "";
       dispatch({
-        type: action.app.setOperand,
+        type: action.app.setAnswer,
         payload: {
           state,
         },
       });
-    }
 
-    const number = event.currentTarget.value;
-    // if (operand.length < 13) setOperand((prev) => `${prev}${number}`);
-    if (state.appState.operand.length < 13) {
-      const newValue = `${state.appState.operand}${number}`;
+      //sets operand to new value to be displayed
       state.appState.operand = newValue;
-
       dispatch({
         type: action.app.setOperand,
         payload: {
@@ -249,16 +248,23 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
             break;
         }
         //after switch block
-        state.appState.operand = result;
+        state.appState.answer = result;
+        dispatch({
+          type: action.app.setAnswer,
+          payload: {
+            state,
+          },
+        });
+
         for (let i = 0; i < 3; i += 1) state.appState.expressions.shift();
         state.appState.expressions.unshift(result);
+
         dispatch({
           type: action.app.setExpression,
           payload: {
             state,
           },
         });
-        //
       }
     }
   }
@@ -266,13 +272,15 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   return (
     <div className="grid h-full w-full grid-rows-6 gap-y-5">
       {/* history */}
-      <History state={state}>
+      <History state={state} data-cy="history">
         {JSON.stringify(state.appState.expressions)}
       </History>
 
       {/* display */}
       <Display state={state} data-cy="display">
-        {state.appState.operand}
+        {state.appState.answer === ""
+          ? state.appState.operand
+          : state.appState.answer}
       </Display>
 
       {/* buttons */}
@@ -430,6 +438,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
             <EnterBttn
               state={state}
               onClick={handleOperatorBttnClick}
+              data-cy="bttn-enter"
               value="="
             >
               =
@@ -459,3 +468,17 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
 }
 
 export default Calculator;
+
+/**
+ //clears the display if the last expression was an operator
+    if (state.appState.expressions.length === 2) {
+      console.log("clearing operand");
+      state.appState.operand = "";
+      dispatch({
+        type: action.app.setOperand,
+        payload: {
+          state,
+        },
+      });
+    }
+ */

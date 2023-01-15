@@ -6,6 +6,7 @@ const initialState: State = {
     operator: "",
     expressions: [],
     result: [],
+    answer: "",
   },
   themeState: {
     $theme: "theme1",
@@ -18,6 +19,7 @@ const action: Action = {
     setOperator: "setOperator",
     setExpression: "setExpression",
     setResult: "setResult",
+    setAnswer: "setAnswer",
   },
   theme: {
     switchTheme: "switchTheme",
