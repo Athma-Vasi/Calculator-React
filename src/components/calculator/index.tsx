@@ -14,15 +14,15 @@ type CalculatorProps = {
 };
 
 function Calculator({ state, action, dispatch }: CalculatorProps) {
-  const [operand, setOperand] = useState("");
-  const [operator, setOperator] = useState("");
-  const [expressionArr, setExpressionArr] = useState<(Operator | string)[]>([]);
+  //
 
+  //
+  //
   function handleDecimalBttnClick(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
     const value = event.currentTarget.value;
-    if (!operand.includes(".")) {
+    if (!state.appState.operand.includes(".")) {
       // setOperand((prev) => `${prev}${value}`);
       const newValue = `${state.appState.operand}${value}`;
       state.appState.operand = newValue;
@@ -102,9 +102,20 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   function handleOperandBttnClick(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
+    //clears the display if the last expression was an operator
+    if (state.appState.expressions.length === 2) {
+      state.appState.operand = "";
+      dispatch({
+        type: action.app.setOperand,
+        payload: {
+          state,
+        },
+      });
+    }
+
     const number = event.currentTarget.value;
     // if (operand.length < 13) setOperand((prev) => `${prev}${number}`);
-    if (operand.length < 13) {
+    if (state.appState.operand.length < 13) {
       const newValue = `${state.appState.operand}${number}`;
       state.appState.operand = newValue;
 
@@ -133,7 +144,6 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     const operand_ = state.appState.operand;
     state.appState.expressions.push(operand_);
     state.appState.expressions.push(operator_);
-
     dispatch({
       type: action.app.setExpression,
       payload: {
@@ -148,6 +158,99 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         state,
       },
     });
+
+    if (state.appState.expressions.length > 2) {
+      const [prevOperandStr, operator, nextOperandStr] =
+        state.appState.expressions.slice(0, 3) as [string, Operator, string];
+
+      {
+        const largerLengthOfOperands =
+          prevOperandStr.length > nextOperandStr.length
+            ? prevOperandStr.length + 1
+            : nextOperandStr.length + 1;
+
+        const prevOperandDigitsAfterDecimal = prevOperandStr.includes(".")
+          ? (prevOperandStr.split(".")[1]?.length as number)
+          : (0 as number);
+
+        const nextOperandDigitsAfterDecimal = nextOperandStr.includes(".")
+          ? (nextOperandStr.split(".")[1]?.length as number)
+          : (0 as number);
+
+        console.log(
+          prevOperandDigitsAfterDecimal,
+          nextOperandDigitsAfterDecimal
+        );
+
+        //choose the smallest value of digits after decimal
+        const resultDigitsAfterDecimal =
+          prevOperandDigitsAfterDecimal > nextOperandDigitsAfterDecimal
+            ? nextOperandDigitsAfterDecimal
+            : prevOperandDigitsAfterDecimal;
+
+        let result = "";
+        const prevOperandNum = parseFloat(prevOperandStr);
+        const nextOperandNum = parseFloat(nextOperandStr);
+
+        switch (operator) {
+          case "/": {
+            result =
+              resultDigitsAfterDecimal === 0
+                ? (prevOperandNum / nextOperandNum).toPrecision(
+                    largerLengthOfOperands
+                  )
+                : (prevOperandNum / nextOperandNum).toFixed(
+                    resultDigitsAfterDecimal
+                  );
+            break;
+          }
+          case "+": {
+            result =
+              resultDigitsAfterDecimal === 0
+                ? (prevOperandNum + nextOperandNum).toPrecision(
+                    largerLengthOfOperands
+                  )
+                : (prevOperandNum + nextOperandNum).toFixed(
+                    resultDigitsAfterDecimal
+                  );
+            break;
+          }
+          case "-": {
+            result =
+              resultDigitsAfterDecimal === 0
+                ? (prevOperandNum - nextOperandNum).toPrecision(
+                    largerLengthOfOperands
+                  )
+                : (prevOperandNum - nextOperandNum).toFixed(
+                    resultDigitsAfterDecimal
+                  );
+            break;
+          }
+          case "*": {
+            result =
+              resultDigitsAfterDecimal === 0
+                ? (prevOperandNum * nextOperandNum).toPrecision(
+                    largerLengthOfOperands
+                  )
+                : (prevOperandNum * nextOperandNum).toFixed(
+                    resultDigitsAfterDecimal
+                  );
+            break;
+          }
+        }
+        //after switch block
+        state.appState.operand = result;
+        for (let i = 0; i < 3; i += 1) state.appState.expressions.shift();
+        state.appState.expressions.unshift(result);
+        dispatch({
+          type: action.app.setExpression,
+          payload: {
+            state,
+          },
+        });
+        //
+      }
+    }
   }
 
   return (

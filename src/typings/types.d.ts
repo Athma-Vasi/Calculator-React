@@ -3,6 +3,7 @@ export type State = {
     operand: string;
     operator: Operator | "";
     expressions: string[];
+    result: string[];
   };
   themeState: {
     $theme: "theme1" | "theme2" | "theme3";
@@ -21,6 +22,7 @@ export type Action = {
     setOperand: "setOperand";
     setOperator: "setOperator";
     setExpression: "setExpression";
+    setResult: "setResult";
   };
   theme: {
     switchTheme: "switchTheme";

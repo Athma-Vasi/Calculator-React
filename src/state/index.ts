@@ -5,6 +5,7 @@ const initialState: State = {
     operand: "",
     operator: "",
     expressions: [],
+    result: [],
   },
   themeState: {
     $theme: "theme1",
@@ -16,6 +17,7 @@ const action: Action = {
     setOperand: "setOperand",
     setOperator: "setOperator",
     setExpression: "setExpression",
+    setResult: "setResult",
   },
   theme: {
     switchTheme: "switchTheme",
@@ -23,23 +25,28 @@ const action: Action = {
 };
 
 function reducer(state: State, action: Dispatch) {
+  // deep clone the state object
   const clone = structuredClone(state);
+  const {
+    appState: { operand, operator, expressions },
+    themeState: { $theme },
+  } = action.payload.state;
 
   switch (action.type) {
     case "switchTheme": {
-      clone.themeState.$theme = action.payload.state.themeState.$theme;
+      clone.themeState.$theme = $theme;
       return clone;
     }
     case "setOperand": {
-      clone.appState.operand = action.payload.state.appState.operand;
+      clone.appState.operand = operand;
       return clone;
     }
     case "setOperator": {
-      clone.appState.operator = action.payload.state.appState.operator;
+      clone.appState.operator = operator;
       return clone;
     }
     case "setExpression": {
-      clone.appState.expressions = action.payload.state.appState.expressions;
+      clone.appState.expressions = expressions;
       return clone;
     }
 
