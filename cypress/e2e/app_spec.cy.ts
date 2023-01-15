@@ -1,5 +1,5 @@
 import { mount } from "cypress/react18";
-/*
+
 describe("Theme switching", () => {
   it("should have switch in first position at initial visit", () => {
     cy.visit("http://localhost:3000/");
@@ -259,8 +259,6 @@ describe("Subtraction functionality", () => {
   });
 });
 
-
-
 describe("Division functionality", () => {
   it("should divide two numbers", () => {
     cy.visit("http://localhost:3000/");
@@ -428,8 +426,6 @@ describe("Division functionality", () => {
   });
 });
 
-
-
 describe("Multiplication functionality", () => {
   it("should multiply two numbers", () => {
     cy.visit("http://localhost:3000/");
@@ -545,8 +541,6 @@ describe("Multiplication functionality", () => {
     cy.get('[data-cy="display"]').should("not.contain.text");
   });
 });
-
-*/
 
 describe("Multiple operations chained together", () => {
   it("should enter a number then backspace then enter decimal then click add then enter a number then click enter", () => {

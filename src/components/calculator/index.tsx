@@ -22,80 +22,20 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   function handleDecimalBttnClick(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
-    //fix the bug where nextOperand is not accepting a value after decimal
-
-    const value = event.currentTarget.value;
-    if (!state.appState.operand.includes(".")) {
-      // setOperand((prev) => `${prev}${value}`);
-      const newValue = `${state.appState.operand}${value}`;
-      state.appState.operand = newValue;
-
-      dispatch({
-        type: action.app.setOperand,
-        payload: {
-          state,
-        },
-      });
-    }
+    
   }
 
   function handleToggleMinusClick() {
     // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     const currentValue = state.appState.operand;
 
-    if (state.appState.operand.includes("-")) {
-      const newValue = currentValue.replace("-", "");
-      // setOperand(newValue);
-      state.appState.operand = newValue;
-
-      dispatch({
-        type: action.app.setOperand,
-        payload: {
-          state,
-        },
-      });
-    }
-    // else setOperand((prev) => `-${prev}`);
-    else {
-      const newValue = `-${currentValue}`;
-      // setOperand(newValue);
-      state.appState.operand = newValue;
-
-      dispatch({
-        type: action.app.setOperand,
-        payload: {
-          state,
-        },
-      });
-    }
+    
   }
 
   function handleClearBttnClick() {
     // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     // setOperand("");
-    state.appState.operand = "";
-    dispatch({
-      type: action.app.setOperand,
-      payload: {
-        state,
-      },
-    });
-
-    state.appState.answer = "";
-    dispatch({
-      type: action.app.setAnswer,
-      payload: {
-        state,
-      },
-    });
-
-    state.appState.expressions = [];
-    dispatch({
-      type: action.app.setExpression,
-      payload: {
-        state,
-      },
-    });
+    
   }
 
   function handleBackspaceBttnClick() {
@@ -103,53 +43,14 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     const currentValue = state.appState.operand;
     const newValue =
       currentValue.at(-1) === "-" ? "-" : currentValue.slice(0, -1);
-    // setOperand(newValue);
-    state.appState.operand = newValue;
-
-    dispatch({
-      type: action.app.setOperand,
-      payload: {
-        state,
-      },
-    });
+    
   }
 
   function handleOperandBttnClick(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
     const number = event.currentTarget.value;
-    if (state.appState.operand.length < 13) {
-      const newValue = `${state.appState.operand}${number}`;
-
-      //allows operations after division by zero to proceed properly
-      if (state.appState.expressions[0] === "Error: Divide by 0") {
-        state.appState.expressions = [];
-        dispatch({
-          type: action.app.setExpression,
-          payload: {
-            state,
-          },
-        });
-      }
-
-      //when operand is clicked right after an answer is displayed, resets answer to empty to allow operand to be displayed on screen
-      state.appState.answer = "";
-      dispatch({
-        type: action.app.setAnswer,
-        payload: {
-          state,
-        },
-      });
-
-      //sets operand to new value to be displayed
-      state.appState.operand = newValue;
-      dispatch({
-        type: action.app.setOperand,
-        payload: {
-          state,
-        },
-      });
-    }
+    
   }
 
   function handleOperatorBttnClick(
@@ -157,214 +58,18 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   ) {
     const operator_ = event.currentTarget.value as Operator;
 
-    state.appState.operator = operator_;
-    dispatch({
-      type: action.app.setOperator,
-      payload: {
-        state,
-      },
-    });
+    
 
-    //prevents operator from being added to expressions array if operand contains only decimal
-    if (state.appState.operand === ".") {
-      state.appState.operand = "";
-      dispatch({
-        type: action.app.setOperand,
-        payload: {
-          state,
-        },
-      });
+    
+    
 
-      state.appState.operator = "";
-      dispatch({
-        type: action.app.setOperator,
-        payload: {
-          state,
-        },
-      });
+      
 
-      state.appState.expressions = [];
-      dispatch({
-        type: action.app.setExpression,
-        payload: {
-          state,
-        },
-      });
-    }
-    //
-    else {
-      const operand_ = state.appState.operand;
-      state.appState.expressions.push(operand_);
-      state.appState.expressions.push(operator_);
-      dispatch({
-        type: action.app.setExpression,
-        payload: {
-          state,
-        },
-      });
+      
 
-      state.appState.operand = "";
-      dispatch({
-        type: action.app.setOperand,
-        payload: {
-          state,
-        },
-      });
+      
 
-      //handles case where enter is clicked after only one operand is entered
-      if (
-        state.appState.expressions.length === 2 &&
-        state.appState.expressions[1] === "="
-      ) {
-        state.appState.answer = state.appState.expressions[0] ?? "";
-        dispatch({
-          type: action.app.setAnswer,
-          payload: {
-            state,
-          },
-        });
-      }
-
-      //if only plusMinus is clicked, then operator is clicked, expression is set to empty array
-      if (
-        state.appState.expressions.length === 2 &&
-        state.appState.expressions[0] === "-"
-      ) {
-        state.appState.expressions = [];
-        dispatch({
-          type: action.app.setExpression,
-          payload: {
-            state,
-          },
-        });
-      }
-
-      if (
-        state.appState.expressions.length === 2 &&
-        state.appState.expressions[0] === "NaN"
-      ) {
-        state.appState.expressions = [];
-        dispatch({
-          type: action.app.setExpression,
-          payload: {
-            state,
-          },
-        });
-      }
-
-      if (state.appState.expressions.length > 2) {
-        const [prevOperandStr, operator, nextOperandStr] =
-          state.appState.expressions.slice(0, 3) as [string, Operator, string];
-
-        {
-          const largerLengthOfOperands =
-            prevOperandStr.length > nextOperandStr.length
-              ? prevOperandStr.length + 1
-              : nextOperandStr.length + 1;
-
-          const prevOperandDigitsAfterDecimal = prevOperandStr.includes(".")
-            ? (prevOperandStr.split(".")[1]?.length as number)
-            : (0 as number);
-
-          const nextOperandDigitsAfterDecimal = nextOperandStr.includes(".")
-            ? (nextOperandStr.split(".")[1]?.length as number)
-            : (0 as number);
-
-          //choose the smallest value of digits after decimal
-          const resultDigitsAfterDecimal =
-            prevOperandDigitsAfterDecimal > nextOperandDigitsAfterDecimal
-              ? nextOperandDigitsAfterDecimal
-              : prevOperandDigitsAfterDecimal;
-
-          let result = "";
-          const prevOperandNum = parseFloat(prevOperandStr);
-          const nextOperandNum = parseFloat(nextOperandStr);
-
-          switch (operator) {
-            case "/": {
-              nextOperandNum === 0
-                ? (result = "Error: Divide by 0")
-                : (result =
-                    resultDigitsAfterDecimal === 0
-                      ? (prevOperandNum / nextOperandNum).toPrecision(
-                          largerLengthOfOperands < 12
-                            ? largerLengthOfOperands
-                            : 12
-                        )
-                      : (prevOperandNum / nextOperandNum).toFixed(
-                          resultDigitsAfterDecimal < 12
-                            ? resultDigitsAfterDecimal
-                            : 12
-                        ));
-              break;
-            }
-            case "+": {
-              result =
-                resultDigitsAfterDecimal === 0
-                  ? (prevOperandNum + nextOperandNum).toPrecision(
-                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                    )
-                  : (prevOperandNum + nextOperandNum).toFixed(
-                      resultDigitsAfterDecimal < 12
-                        ? resultDigitsAfterDecimal
-                        : 12
-                    );
-              break;
-            }
-            case "-": {
-              result =
-                resultDigitsAfterDecimal === 0
-                  ? (prevOperandNum - nextOperandNum).toPrecision(
-                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                    )
-                  : (prevOperandNum - nextOperandNum).toFixed(
-                      resultDigitsAfterDecimal < 12
-                        ? resultDigitsAfterDecimal
-                        : 12
-                    );
-              break;
-            }
-            case "*": {
-              result =
-                resultDigitsAfterDecimal === 0
-                  ? (prevOperandNum * nextOperandNum).toPrecision(
-                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                    )
-                  : (prevOperandNum * nextOperandNum).toFixed(
-                      resultDigitsAfterDecimal < 12
-                        ? resultDigitsAfterDecimal
-                        : 12
-                    );
-              break;
-            }
-            case "=": {
-              result = prevOperandStr;
-              break;
-            }
-            default:
-              result = "0";
-              break;
-          }
-          //after switch block
-          state.appState.answer = result;
-          dispatch({
-            type: action.app.setAnswer,
-            payload: {
-              state,
-            },
-          });
-
-          for (let i = 0; i < 3; i += 1) state.appState.expressions.shift();
-          state.appState.expressions.unshift(result);
-
-          dispatch({
-            type: action.app.setExpression,
-            payload: {
-              state,
-            },
-          });
-        }
-      }
+      
     }
   }
 
@@ -372,7 +77,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     <div className="grid h-full w-full grid-rows-6 gap-y-5">
       {/* history */}
       <History state={state} data-cy="history">
-        {JSON.stringify(state.appState.expressions)}
+        {JSON.stringify(state.appState.history)}
       </History>
 
       {/* display */}
@@ -569,15 +274,129 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
 export default Calculator;
 
 /**
- //clears the display if the last expression was an operator
-    if (state.appState.expressions.length === 2) {
-      console.log("clearing operand");
-      state.appState.operand = "";
-      dispatch({
-        type: action.app.setOperand,
-        payload: {
-          state,
-        },
-      });
-    }
+ if (state.appState.expressions.length > 2) {
+        const operators = "+*-/";
+        const [prevOperandStr, operator, nextOperandStr] =
+          state.appState.expressions.slice(0, 3) as [
+            string,
+            Operator | "",
+            string
+          ];
+
+        {
+          const largerLengthOfOperands =
+            prevOperandStr.length > nextOperandStr.length
+              ? prevOperandStr.length + 1
+              : nextOperandStr.length + 1;
+
+          const prevOperandDigitsAfterDecimal = prevOperandStr.includes(".")
+            ? (prevOperandStr.split(".")[1]?.length as number)
+            : (0 as number);
+
+          const nextOperandDigitsAfterDecimal = nextOperandStr.includes(".")
+            ? (nextOperandStr.split(".")[1]?.length as number)
+            : (0 as number);
+
+          //choose the smallest value of digits after decimal
+          const resultDigitsAfterDecimal =
+            prevOperandDigitsAfterDecimal > nextOperandDigitsAfterDecimal
+              ? nextOperandDigitsAfterDecimal
+              : prevOperandDigitsAfterDecimal;
+
+          let result = "";
+          const prevOperandNum = parseFloat(prevOperandStr);
+          const nextOperandNum = parseFloat(nextOperandStr);
+
+          switch (operator) {
+            case "/": {
+              nextOperandNum === 0
+                ? (result = "Error: Divide by 0")
+                : (result =
+                    resultDigitsAfterDecimal === 0
+                      ? (prevOperandNum / nextOperandNum).toPrecision(
+                          largerLengthOfOperands < 12
+                            ? largerLengthOfOperands
+                            : 12
+                        )
+                      : (prevOperandNum / nextOperandNum).toFixed(
+                          resultDigitsAfterDecimal < 12
+                            ? resultDigitsAfterDecimal
+                            : 12
+                        ));
+              break;
+            }
+            case "+": {
+              result =
+                resultDigitsAfterDecimal === 0
+                  ? (prevOperandNum + nextOperandNum).toPrecision(
+                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
+                    )
+                  : (prevOperandNum + nextOperandNum).toFixed(
+                      resultDigitsAfterDecimal < 12
+                        ? resultDigitsAfterDecimal
+                        : 12
+                    );
+              break;
+            }
+            case "-": {
+              result =
+                resultDigitsAfterDecimal === 0
+                  ? (prevOperandNum - nextOperandNum).toPrecision(
+                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
+                    )
+                  : (prevOperandNum - nextOperandNum).toFixed(
+                      resultDigitsAfterDecimal < 12
+                        ? resultDigitsAfterDecimal
+                        : 12
+                    );
+              break;
+            }
+            case "*": {
+              result =
+                resultDigitsAfterDecimal === 0
+                  ? (prevOperandNum * nextOperandNum).toPrecision(
+                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
+                    )
+                  : (prevOperandNum * nextOperandNum).toFixed(
+                      resultDigitsAfterDecimal < 12
+                        ? resultDigitsAfterDecimal
+                        : 12
+                    );
+              break;
+            }
+            case "=": {
+              result = prevOperandStr;
+              break;
+            }
+            default:
+              result = "0";
+              break;
+          }
+
+          state.appState.history.push([
+            prevOperandStr,
+            operator,
+            nextOperandStr,
+            result,
+          ]);
+
+          state.appState.answer = result;
+          dispatch({
+            type: action.app.setAnswer,
+            payload: {
+              state,
+            },
+          });
+
+          for (let i = 0; i < 3; i += 1) state.appState.expressions.shift();
+          state.appState.expressions.unshift(result);
+
+          dispatch({
+            type: action.app.setExpression,
+            payload: {
+              state,
+            },
+          });
+        }
+      }
  */
