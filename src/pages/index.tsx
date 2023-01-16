@@ -270,7 +270,18 @@ const Home: NextPage = () => {
       {/* left padding empty div */}
       <div className="col-span-1 row-start-1 row-end-4 "></div>
 
-      <div className="col-span-1 row-start-2 row-end-3 grid grid-rows-[7]">
+      <div className="col-span-1 row-start-2 row-end-3 grid grid-rows-[8]">
+        <div className="row-span-1 mb-4 flex flex-row items-center justify-between px-6">
+          <p>
+            Made by <a href="https://github.com/Athma-Vasi">Athma Vasi</a>
+          </p>
+          <p>
+            <a href="https://github.com/Athma-Vasi/calculator-react">
+              View code
+            </a>
+          </p>
+        </div>
+
         <Header state={state}>
           <h1 className="mt-3 text-4xl font-bold">calc</h1>
           {/* theme */}
