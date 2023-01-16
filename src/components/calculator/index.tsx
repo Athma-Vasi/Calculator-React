@@ -7,7 +7,6 @@ import { EnterBttn } from "../../styledTwComponents/enterBttn";
 import { History } from "../../styledTwComponents/history";
 import { OperandBttn } from "../../styledTwComponents/operandBttn";
 import { OperatorBttn } from "../../styledTwComponents/operatorBttn";
-import { String } from "cypress/types/lodash";
 
 type CalculatorProps = {
   state: State;
@@ -26,7 +25,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     const value = event.currentTarget.value;
 
     const currentValue =
-      state.appState.nextOperand === null
+      state.appState.nextOperand === null && state.appState.operator === null
         ? state.appState.prevOperand
         : state.appState.nextOperand;
 
@@ -184,7 +183,9 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
           state.appState.history.length - 1
         ] as string[];
 
-        state.appState.prevOperand = history[4] as string;
+        state.appState.prevOperand =
+          history[4] === "Error: Division by 0" ? "0" : (history[4] as string);
+
         dispatch({
           type: action.app.setPrevOperand,
           payload: { state },
@@ -240,7 +241,9 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
       case "*":
         return prevOperand_ * nextOperand_;
       case "/":
-        return prevOperand_ / nextOperand_;
+        return nextOperand_ === 0
+          ? "Error: Division by 0"
+          : prevOperand_ / nextOperand_;
       default:
         return 0;
     }

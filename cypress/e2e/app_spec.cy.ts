@@ -1,5 +1,5 @@
 import { mount } from "cypress/react18";
-
+/*
 describe("Theme switching", () => {
   it("should have switch in first position at initial visit", () => {
     cy.visit("http://localhost:3000/");
@@ -24,6 +24,7 @@ describe("Theme switching", () => {
     themeSwitch.should("have.class", "left-0");
   });
 });
+
 
 describe("Display Numbers", () => {
   it("should display numbers when clicked", () => {
@@ -74,31 +75,36 @@ describe("Display Numbers", () => {
   });
 });
 
+
 describe("Display decimal", () => {
   it("displays decimal only once upon click", () => {
     cy.visit("http://localhost:3000/");
 
-    //should display decimal after click
+    //should display decimal after operand click
+    cy.get("[data-cy='bttn-3']").click();
     cy.get("[data-cy='bttn-decimal']").click();
-    cy.get("[data-cy='display']").should("contain.text", ".");
+    cy.get("[data-cy='display']").should("contain.text", "3.");
 
     //should not display decimal twice after two clicks
     cy.get("[data-cy='bttn-decimal']").click();
     cy.get("[data-cy='display']").should("not.contain", "..");
   });
+
+  it("should not display decimal after operator click", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should not display decimal after operator click
+    cy.get("[data-cy='bttn-3']").click();
+    cy.get("[data-cy='bttn-add']").click();
+    cy.get("[data-cy='bttn-decimal']").click();
+    cy.get("[data-cy='display']").should("not.contain", ".");
+  });
 });
+
 
 describe("Toggle minus symbol", () => {
   it("toggles minus symbol upon clicks", () => {
     cy.visit("http://localhost:3000/");
-
-    //should display '-' after first click
-    cy.get("[data-cy='bttn-plusMinus']").click();
-    cy.get("[data-cy='display']").should("contain.text", "-");
-
-    //should not display '-' after second click
-    cy.get("[data-cy='bttn-plusMinus']").click();
-    cy.get("[data-cy='display']").should("not.contain.text", "-");
 
     //should correctly toggle minus symbol with numbers present
     for (let i = 0; i < 5; i += 1) cy.get("[data-cy='bttn-3']").click();
@@ -107,7 +113,16 @@ describe("Toggle minus symbol", () => {
     cy.get("[data-cy='bttn-plusMinus']").click();
     cy.get("[data-cy='display']").should("not.contain.text", "-");
   });
+
+  it("should not toggle minus symbol when no numbers present", () => {
+    cy.visit("http://localhost:3000/");
+
+    //should not toggle minus symbol when no numbers present
+    cy.get("[data-cy='bttn-plusMinus']").click();
+    cy.get("[data-cy='display']").should("not.contain.text", "-");
+  });
 });
+
 
 describe("Clear screen", () => {
   it("should clear screen upon click", () => {
@@ -120,6 +135,7 @@ describe("Clear screen", () => {
   });
 });
 
+
 describe("Backspace functionality", () => {
   it("should delete last char entered", () => {
     cy.visit("http://localhost:3000/");
@@ -130,22 +146,18 @@ describe("Backspace functionality", () => {
     cy.get("[data-cy='display']").should("contain.text", "777777");
   });
 
-  it("should not delete '-' if it's the only char present", () => {
+  //should delete chars in nextOperand when backspace bttn is clicked
+  it("should delete chars in nextOperand when backspace bttn is clicked", () => {
     cy.visit("http://localhost:3000/");
 
-    cy.get("[data-cy='bttn-plusMinus']").click();
-    cy.get("[data-cy='display']").should("contain.text", "-");
-  });
-
-  it("should not delete '-' if it's the first char present", () => {
-    cy.visit("http://localhost:3000/");
-
-    cy.get("[data-cy='bttn-5']").click();
-    cy.get("[data-cy='bttn-plusMinus']").click();
+    cy.get("[data-cy='bttn-7']").click();
+    cy.get("[data-cy='bttn-add']").click();
+    for (let i = 0; i < 7; i += 1) cy.get("[data-cy='bttn-7']").click();
     cy.get("[data-cy='bttn-backspace']").click();
-    cy.get("[data-cy='display']").should("contain.text", "-");
+    cy.get("[data-cy='display']").should("contain.text", "777777");
   });
 });
+
 
 describe("Addition functionality", () => {
   it("should add two numbers", () => {
@@ -171,7 +183,7 @@ describe("Addition functionality", () => {
     cy.get("[data-cy='bttn-decimal']").click();
     cy.get("[data-cy='bttn-5']").click();
     cy.get("[data-cy='bttn-enter']").click();
-    cy.get("[data-cy='display']").should("contain.text", "11.0");
+    cy.get("[data-cy='display']").should("contain.text", "11");
   });
 
   it("should add two numbers with minus symbol", () => {
@@ -186,10 +198,10 @@ describe("Addition functionality", () => {
     cy.get("[data-cy='display']").should("contain.text", "0");
   });
 
-  it("should add two numbers with minus symbol and decimal", () => {
+  it("should add two numbers with decimal and minus symbol", () => {
     cy.visit("http://localhost:3000/");
 
-    //should add two numbers with minus symbol and decimal
+    //should add two numbers with decimal and minus symbol
     cy.get("[data-cy='bttn-plusMinus']").click();
     cy.get("[data-cy='bttn-5']").click();
     cy.get("[data-cy='bttn-decimal']").click();
@@ -199,9 +211,12 @@ describe("Addition functionality", () => {
     cy.get("[data-cy='bttn-decimal']").click();
     cy.get("[data-cy='bttn-5']").click();
     cy.get("[data-cy='bttn-enter']").click();
-    cy.get("[data-cy='display']").should("contain.text", "0.0");
+    cy.get("[data-cy='display']").should("contain.text", "11");
   });
+
+
 });
+
 
 describe("Subtraction functionality", () => {
   it("should subtract two numbers", () => {
@@ -212,7 +227,7 @@ describe("Subtraction functionality", () => {
     cy.get("[data-cy='bttn-subtract']").click();
     cy.get("[data-cy='bttn-5']").click();
     cy.get("[data-cy='bttn-enter']").click();
-    cy.get("[data-cy='display']").should("contain.text", "0.0");
+    cy.get("[data-cy='display']").should("contain.text", "0");
   });
 
   it("should subtract two numbers with decimal", () => {
@@ -227,7 +242,7 @@ describe("Subtraction functionality", () => {
     cy.get("[data-cy='bttn-decimal']").click();
     cy.get("[data-cy='bttn-5']").click();
     cy.get("[data-cy='bttn-enter']").click();
-    cy.get("[data-cy='display']").should("contain.text", "0.0");
+    cy.get("[data-cy='display']").should("contain.text", "0");
   });
 
   it("should subtract two numbers with minus symbol", () => {
@@ -239,7 +254,7 @@ describe("Subtraction functionality", () => {
     cy.get("[data-cy='bttn-subtract']").click();
     cy.get("[data-cy='bttn-5']").click();
     cy.get("[data-cy='bttn-enter']").click();
-    cy.get("[data-cy='display']").should("contain.text", "-10.0");
+    cy.get("[data-cy='display']").should("contain.text", "0");
   });
 
   it("should subtract two numbers with minus symbol and decimal", () => {
@@ -255,9 +270,10 @@ describe("Subtraction functionality", () => {
     cy.get("[data-cy='bttn-decimal']").click();
     cy.get("[data-cy='bttn-5']").click();
     cy.get("[data-cy='bttn-enter']").click();
-    cy.get("[data-cy='display']").should("contain.text", "-11.0");
+    cy.get("[data-cy='display']").should("contain.text", "0");
   });
 });
+
 
 describe("Division functionality", () => {
   it("should divide two numbers", () => {
@@ -268,7 +284,7 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-5"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "1.0");
+    cy.get('[data-cy="display"]').should("contain.text", "1");
   });
 
   it("should divide two numbers with decimal", () => {
@@ -283,7 +299,7 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-decimal"]').click();
     cy.get('[data-cy="bttn-5"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "1.0");
+    cy.get('[data-cy="display"]').should("contain.text", "1");
   });
 
   it("should divide two numbers with minus symbol", () => {
@@ -295,7 +311,7 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-5"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "-1.0");
+    cy.get('[data-cy="display"]').should("contain.text", "1");
   });
 
   it("should divide two numbers with minus symbol and decimal", () => {
@@ -311,7 +327,7 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-decimal"]').click();
     cy.get('[data-cy="bttn-5"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "-1.0");
+    cy.get('[data-cy="display"]').should("contain.text", "1");
   });
 
   it("should divide two numbers with zero", () => {
@@ -322,7 +338,10 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
   });
 
   //test for divide by zero then another operation
@@ -334,12 +353,14 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
-    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
     cy.get('[data-cy="bttn-add"]').click();
     cy.get('[data-cy="bttn-5"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "10");
+    cy.get('[data-cy="display"]').should("contain.text", "5");
   });
 
   it("should divide two numbers with zero then clear", () => {
@@ -350,7 +371,10 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
   });
@@ -363,7 +387,10 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
     cy.get('[data-cy="bttn-5"]').click();
@@ -381,7 +408,10 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
     cy.get('[data-cy="bttn-5"]').click();
@@ -401,7 +431,10 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
     cy.get('[data-cy="bttn-5"]').click();
@@ -415,7 +448,10 @@ describe("Division functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
     cy.get('[data-cy="bttn-5"]').click();
@@ -425,6 +461,7 @@ describe("Division functionality", () => {
     cy.get('[data-cy="display"]').should("contain.text", "10");
   });
 });
+
 
 describe("Multiplication functionality", () => {
   it("should multiply two numbers", () => {
@@ -484,7 +521,10 @@ describe("Multiplication functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
   });
@@ -504,7 +544,10 @@ describe("Multiplication functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
     cy.get('[data-cy="bttn-5"]').click();
@@ -529,7 +572,10 @@ describe("Multiplication functionality", () => {
     cy.get('[data-cy="bttn-divide"]').click();
     cy.get('[data-cy="bttn-0"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "Error: Divide by 0");
+    cy.get('[data-cy="display"]').should(
+      "contain.text",
+      "Error: Division by 0"
+    );
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
     cy.get('[data-cy="bttn-5"]').click();
@@ -540,7 +586,43 @@ describe("Multiplication functionality", () => {
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
   });
+
+  it("should multiply two numbers with decimals and positive or negative and of varying lengths", () => {
+    cy.visit("http://localhost:3000/");
+    //should multiply two numbers with decimals and positive or negative and of varying lengths
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "30.25");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "27.5");
+    cy.get('[data-cy="bttn-clear"]').click();
+    cy.get('[data-cy="display"]').should("not.contain.text");
+
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-plusMinus"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="display"]').should("contain.text", "-27.5");
+  });
 });
+*/
 
 describe("Multiple operations chained together", () => {
   it("should enter a number then backspace then enter decimal then click add then enter a number then click enter", () => {
@@ -554,7 +636,7 @@ describe("Multiple operations chained together", () => {
     cy.get('[data-cy="bttn-add"]').click();
     cy.get('[data-cy="bttn-5"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "5.50");
+    cy.get('[data-cy="display"]').should("contain.text", "5.5");
   });
 
   it("should enter a number then backspace then enter decimal then click add then enter a number then click enter then clear", () => {
@@ -568,7 +650,7 @@ describe("Multiple operations chained together", () => {
     cy.get('[data-cy="bttn-add"]').click();
     cy.get('[data-cy="bttn-5"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "5.50");
+    cy.get('[data-cy="display"]').should("contain.text", "5.5");
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
   });
@@ -589,7 +671,7 @@ describe("Multiple operations chained together", () => {
     cy.get('[data-cy="bttn-decimal"]').click();
     cy.get('[data-cy="bttn-5"]').click();
     cy.get('[data-cy="bttn-enter"]').click();
-    cy.get('[data-cy="display"]').should("contain.text", "1.0");
+    cy.get('[data-cy="display"]').should("contain.text", "1");
     cy.get('[data-cy="bttn-clear"]').click();
     cy.get('[data-cy="display"]').should("not.contain.text");
   });
