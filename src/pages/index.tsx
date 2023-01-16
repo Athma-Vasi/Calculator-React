@@ -23,9 +23,8 @@ const Home: NextPage = () => {
     };
   })();
 
-  function handleThemeSwitchClick(
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) {
+  function handleThemeSwitchClick() {
+    // event: React.MouseEvent<HTMLDivElement, MouseEvent>
     const currentTheme = state.themeState.$theme;
     const newTheme =
       currentTheme === "theme1"
@@ -44,10 +43,149 @@ const Home: NextPage = () => {
   useEffect(() => {
     //capture keyboard input
     function handleKeyDown(event: KeyboardEvent) {
-      console.log("event.key", event.key);
+      const eventKey = event.key;
+      const operators = ["+", "-", "*", "/"];
 
+      if (eventKey === "Enter") {
+        if (
+          state.appState.prevOperand !== null &&
+          state.appState.nextOperand !== null &&
+          state.appState.operator !== null
+        ) {
+          const { prevOperand, operator, nextOperand } = state.appState;
+          let result = calculate(prevOperand, operator, nextOperand);
+          const smallerOperandLength = Math.min(
+            prevOperand.length > 12 ? 12 : prevOperand.length,
+            nextOperand.length > 12 ? 12 : nextOperand.length,
+            12
+          );
+          result = parseFloat(`${result}`).toPrecision(
+            smallerOperandLength + 1
+          );
+
+          //only add to history if prevOperand, operator, and nextOperand are not null
+          state.appState.history.push([
+            prevOperand,
+            operator,
+            nextOperand,
+            "=",
+            `${result}`,
+          ]);
+          dispatch({
+            type: action.app.setHistory,
+            payload: { state },
+          });
+
+          state.appState.prevOperand = null;
+          state.appState.nextOperand = null;
+          state.appState.operator = null;
+          state.appState.result = result.toString();
+          dispatch({
+            type: action.app.setAll,
+            payload: { state },
+          });
+        }
+      }
+
+      //handles operators +, -, *, /
+      if (operators.includes(eventKey)) {
+        state.appState.operator = eventKey as "+" | "-" | "*" | "/";
+        dispatch({
+          type: action.app.setOperator,
+          payload: { state },
+        });
+
+        if (
+          state.appState.prevOperand === null &&
+          state.appState.nextOperand === null &&
+          state.appState.history.length !== 0
+        ) {
+          if (
+            state.appState.history[state.appState.history.length - 1] !==
+            undefined
+          ) {
+            const history = state.appState.history[
+              state.appState.history.length - 1
+            ] as string[];
+
+            state.appState.prevOperand =
+              history[4] === "Error: Division by 0"
+                ? "0"
+                : (history[4] as string);
+
+            dispatch({
+              type: action.app.setPrevOperand,
+              payload: { state },
+            });
+          }
+        }
+
+        if (
+          state.appState.prevOperand !== null &&
+          state.appState.nextOperand !== null &&
+          state.appState.operator !== null
+        ) {
+          const { prevOperand, operator, nextOperand } = state.appState;
+          let result = calculate(prevOperand, operator, nextOperand);
+          const smallerOperandLength = Math.min(
+            prevOperand.length > 12 ? 12 : prevOperand.length,
+            nextOperand.length > 12 ? 12 : nextOperand.length,
+            12
+          );
+          result = parseFloat(`${result}`).toPrecision(
+            smallerOperandLength + 1
+          );
+
+          //only add to history if prevOperand, operator, and nextOperand are not null
+          state.appState.history.push([
+            prevOperand,
+            operator,
+            nextOperand,
+            "=",
+            `${result}`,
+          ]);
+          dispatch({
+            type: action.app.setHistory,
+            payload: { state },
+          });
+
+          state.appState.prevOperand = null;
+          state.appState.nextOperand = null;
+          state.appState.operator = null;
+          state.appState.result = result.toString();
+          dispatch({
+            type: action.app.setAll,
+            payload: { state },
+          });
+        }
+      }
+
+      //handles backspace keyboard input
+      if (eventKey === "Backspace") {
+        const currentValue =
+          state.appState.nextOperand === null
+            ? state.appState.prevOperand
+            : state.appState.nextOperand;
+
+        if (currentValue !== null) {
+          const newValue = currentValue.slice(0, -1);
+          state.appState.nextOperand === null
+            ? (state.appState.prevOperand = newValue)
+            : (state.appState.nextOperand = newValue);
+
+          dispatch({
+            type:
+              state.appState.nextOperand === null
+                ? action.app.setPrevOperand
+                : action.app.setNextOperand,
+            payload: { state },
+          });
+        }
+      }
+
+      //only number keyboard input
       if (!Number.isNaN(parseFloat(event.key))) {
-        const number = parseFloat(event.key);
+        const number = parseFloat(eventKey);
 
         if (state.appState.prevOperand === null) {
           state.appState.prevOperand = `${number}`;
@@ -84,6 +222,33 @@ const Home: NextPage = () => {
             type: action.app.setNextOperand,
             payload: { state },
           });
+        }
+      }
+
+      //handles decimal keyboard input
+      if (eventKey === ".") {
+        const value = eventKey;
+
+        const currentValue =
+          state.appState.nextOperand === null &&
+          state.appState.operator === null
+            ? state.appState.prevOperand
+            : state.appState.nextOperand;
+
+        if (currentValue !== null) {
+          if (!currentValue.includes(".")) {
+            state.appState.nextOperand === null
+              ? (state.appState.prevOperand = `${currentValue}${value}`)
+              : (state.appState.nextOperand = `${currentValue}${value}`);
+
+            dispatch({
+              type:
+                state.appState.nextOperand === null
+                  ? action.app.setPrevOperand
+                  : action.app.setNextOperand,
+              payload: { state },
+            });
+          }
         }
       }
     }

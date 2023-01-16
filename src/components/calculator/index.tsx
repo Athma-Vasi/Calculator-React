@@ -16,10 +16,6 @@ type CalculatorProps = {
 };
 
 function Calculator({ state, action, dispatch }: CalculatorProps) {
-  //
-
-  //
-  //
   function handleDecimalBttnClick(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
@@ -333,7 +329,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
           </OperandBttn>
           <OperatorBttn
             state={state}
-            className="text-2xl"
+            className="text-xl"
             data-cy="bttn-divide"
             value="/"
             onClick={handleOperatorBttnClick}
@@ -370,7 +366,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
           </OperandBttn>
           <OperatorBttn
             state={state}
-            className="text-3xl"
+            className="text-2xl"
             data-cy="bttn-add"
             value="+"
             onClick={handleOperatorBttnClick}
@@ -443,7 +439,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
           </OperandBttn>
           <OperatorBttn
             state={state}
-            className="text-xl"
+            className="text-lg"
             value="*"
             data-cy="bttn-multiply"
             onClick={handleOperatorBttnClick}
