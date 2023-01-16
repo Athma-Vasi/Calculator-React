@@ -24,6 +24,27 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
     const value = event.currentTarget.value;
+
+    const currentValue =
+      state.appState.nextOperand === null
+        ? state.appState.prevOperand
+        : state.appState.nextOperand;
+
+    if (currentValue !== null) {
+      if (!currentValue.includes(".")) {
+        state.appState.nextOperand === null
+          ? (state.appState.prevOperand = `${currentValue}${value}`)
+          : (state.appState.nextOperand = `${currentValue}${value}`);
+
+        dispatch({
+          type:
+            state.appState.nextOperand === null
+              ? action.app.setPrevOperand
+              : action.app.setNextOperand,
+          payload: { state },
+        });
+      }
+    }
   }
 
   function handleToggleMinusClick() {
