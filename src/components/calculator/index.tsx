@@ -35,6 +35,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     state.appState.prevOperand = null;
     state.appState.operator = null;
     state.appState.nextOperand = null;
+    state.appState.result = null;
     dispatch({
       type: action.app.setAll,
       payload: { state },
@@ -43,10 +44,17 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
 
   function handleBackspaceBttnClick() {
     // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    const currentValue = state.appState.prevOperand;
+    const currentValue =
+      state.appState.nextOperand === null
+        ? state.appState.prevOperand
+        : state.appState.nextOperand;
+
     if (currentValue !== null) {
       const newValue = currentValue.slice(0, -1);
-      state.appState.prevOperand = newValue;
+      state.appState.nextOperand === null
+        ? (state.appState.prevOperand = newValue)
+        : (state.appState.nextOperand = newValue);
+
       dispatch({
         type: action.app.setPrevOperand,
         payload: { state },
@@ -74,43 +82,24 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         type: action.app.setPrevOperand,
         payload: { state },
       });
-    } else if (state.appState.nextOperand === null) {
+    } else if (
+      state.appState.prevOperand !== null &&
+      state.appState.operator !== null &&
+      state.appState.nextOperand === null
+    ) {
       state.appState.nextOperand = `${number}`;
       dispatch({
         type: action.app.setNextOperand,
         payload: { state },
       });
-    }
-
-    if (
+    } else if (
       state.appState.prevOperand !== null &&
       state.appState.operator !== null &&
       state.appState.nextOperand !== null
     ) {
-      const result = calculate(
-        state.appState.prevOperand,
-        state.appState.operator,
-        state.appState.nextOperand
-      );
-
-      //only add to history if prevOperand, operator, and nextOperand are not null
-      state.appState.history.push([
-        state.appState.prevOperand,
-        state.appState.operator,
-        state.appState.nextOperand,
-        "=",
-        `${result}`,
-      ]);
+      state.appState.nextOperand = `${state.appState.nextOperand}${number}`;
       dispatch({
-        type: action.app.setHistory,
-        payload: { state },
-      });
-
-      state.appState.prevOperand = null;
-      state.appState.nextOperand = null;
-      state.appState.operator = null;
-      dispatch({
-        type: action.app.setAll,
+        type: action.app.setNextOperand,
         payload: { state },
       });
     }
@@ -126,6 +115,26 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
       type: action.app.setOperator,
       payload: { state },
     });
+
+    if (
+      state.appState.prevOperand === null &&
+      state.appState.nextOperand === null &&
+      state.appState.history.length !== 0
+    ) {
+      if (
+        state.appState.history[state.appState.history.length - 1] !== undefined
+      ) {
+        const history = state.appState.history[
+          state.appState.history.length - 1
+        ] as string[];
+
+        state.appState.prevOperand = history[4] as string;
+        dispatch({
+          type: action.app.setPrevOperand,
+          payload: { state },
+        });
+      }
+    }
 
     if (
       state.appState.prevOperand !== null &&
@@ -148,9 +157,10 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         payload: { state },
       });
 
-      state.appState.prevOperand = result.toString();
+      state.appState.prevOperand = null;
       state.appState.nextOperand = null;
       state.appState.operator = null;
+      state.appState.result = result.toString();
       dispatch({
         type: action.app.setAll,
         payload: { state },
@@ -203,9 +213,10 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         payload: { state },
       });
 
-      state.appState.prevOperand = result.toString();
+      state.appState.prevOperand = null;
       state.appState.nextOperand = null;
       state.appState.operator = null;
+      state.appState.result = result.toString();
       dispatch({
         type: action.app.setAll,
         payload: { state },
@@ -222,7 +233,26 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
 
       {/* display */}
       <Display state={state} data-cy="display">
-        {state.appState.history.at(-1) ?? state.appState.history.at(-1)[4]}
+        {state.appState.result &&
+        state.appState.nextOperand &&
+        state.appState.prevOperand === null
+          ? state.appState.nextOperand
+          : state.appState.result &&
+            state.appState.prevOperand &&
+            state.appState.nextOperand === null
+          ? state.appState.prevOperand
+          : state.appState.prevOperand === null &&
+            state.appState.nextOperand === null &&
+            state.appState.result
+          ? state.appState.result
+          : state.appState.result &&
+            state.appState.prevOperand &&
+            state.appState.nextOperand
+          ? state.appState.nextOperand
+          : state.appState.result ??
+            state.appState.nextOperand ??
+            state.appState.prevOperand ??
+            state.appState.nextOperand}
       </Display>
 
       {/* buttons */}

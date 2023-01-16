@@ -5,6 +5,7 @@ const initialState: State = {
     prevOperand: null,
     operator: null,
     nextOperand: null,
+    result: null,
     history: [],
   },
   themeState: {
@@ -17,8 +18,9 @@ const action: Action = {
     setPrevOperand: "setPrevOperand",
     setOperator: "setOperator",
     setNextOperand: "setNextOperand",
-    setAll: "setAll",
+    setResult: "setResult",
     setHistory: "setHistory",
+    setAll: "setAll",
   },
   theme: {
     switchTheme: "switchTheme",
@@ -29,7 +31,7 @@ function reducer(state: State, action: Dispatch) {
   // deep clone the state object
   const clone = structuredClone(state);
   const {
-    appState: { prevOperand, operator, nextOperand, history },
+    appState: { prevOperand, operator, nextOperand, history, result },
     themeState: { $theme },
   } = action.payload.state;
 
@@ -50,16 +52,21 @@ function reducer(state: State, action: Dispatch) {
       clone.appState.nextOperand = nextOperand;
       return clone;
     }
-    case "setAll": {
-      clone.appState.prevOperand = prevOperand;
-      clone.appState.operator = operator;
-      clone.appState.nextOperand = nextOperand;
-      clone.appState.history = history;
-
+    case "setResult": {
+      clone.appState.result = result;
       return clone;
     }
     case "setHistory": {
       clone.appState.history = history;
+      return clone;
+    }
+    case "setAll": {
+      clone.appState.prevOperand = prevOperand;
+      clone.appState.operator = operator;
+      clone.appState.nextOperand = nextOperand;
+      clone.appState.result = result;
+      clone.appState.history = history;
+
       return clone;
     }
 

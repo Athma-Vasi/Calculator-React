@@ -3,6 +3,7 @@ export type State = {
     prevOperand: null | string;
     operator: null | Operator;
     nextOperand: null | string;
+    result: null | string;
     history: Array<string[]>;
   };
   themeState: {
@@ -23,6 +24,7 @@ export type Action = {
     setOperator: "setOperator";
     setNextOperand: "setNextOperand";
     setAll: "setAll";
+    setResult: "setResult";
     setHistory: "setHistory";
   };
   theme: {
