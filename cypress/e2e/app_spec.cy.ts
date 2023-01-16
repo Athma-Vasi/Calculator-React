@@ -1,30 +1,27 @@
 import { mount } from "cypress/react18";
+
 /*
 describe("Theme switching", () => {
-  it("should have switch in first position at initial visit", () => {
+  it("should have switch in second position at initial visit", () => {
     cy.visit("http://localhost:3000/");
 
-    cy.get("[data-cy='theme-switch']").should("have.class", "left-0");
+    cy.get("[data-cy='theme-switch']").should("have.class", "left-[22px]");
   });
 
   it("should move switch to corresponding positions after clicks", () => {
     cy.visit("http://localhost:3000/");
 
-    //first click changes to 2nd position
     const themeSwitch = cy.get("[data-cy='theme-switch']");
-    themeSwitch.click();
-    themeSwitch.should("have.class", "left-[22px]");
 
-    //second click changes to 3rd position
+    //first click changes to 3rd position
     themeSwitch.click();
     themeSwitch.should("have.class", "right-0");
 
-    //third click changes to first position
+    //second click changes to first position
     themeSwitch.click();
     themeSwitch.should("have.class", "left-0");
   });
 });
-
 
 describe("Display Numbers", () => {
   it("should display numbers when clicked", () => {
@@ -75,7 +72,6 @@ describe("Display Numbers", () => {
   });
 });
 
-
 describe("Display decimal", () => {
   it("displays decimal only once upon click", () => {
     cy.visit("http://localhost:3000/");
@@ -101,7 +97,6 @@ describe("Display decimal", () => {
   });
 });
 
-
 describe("Toggle minus symbol", () => {
   it("toggles minus symbol upon clicks", () => {
     cy.visit("http://localhost:3000/");
@@ -123,7 +118,6 @@ describe("Toggle minus symbol", () => {
   });
 });
 
-
 describe("Clear screen", () => {
   it("should clear screen upon click", () => {
     cy.visit("http://localhost:3000/");
@@ -134,7 +128,6 @@ describe("Clear screen", () => {
     cy.get("[data-cy='display']").should("be.empty");
   });
 });
-
 
 describe("Backspace functionality", () => {
   it("should delete last char entered", () => {
@@ -157,7 +150,6 @@ describe("Backspace functionality", () => {
     cy.get("[data-cy='display']").should("contain.text", "777777");
   });
 });
-
 
 describe("Addition functionality", () => {
   it("should add two numbers", () => {
@@ -213,10 +205,7 @@ describe("Addition functionality", () => {
     cy.get("[data-cy='bttn-enter']").click();
     cy.get("[data-cy='display']").should("contain.text", "11");
   });
-
-
 });
-
 
 describe("Subtraction functionality", () => {
   it("should subtract two numbers", () => {
@@ -273,7 +262,7 @@ describe("Subtraction functionality", () => {
     cy.get("[data-cy='display']").should("contain.text", "0");
   });
 });
-
+*/
 
 describe("Division functionality", () => {
   it("should divide two numbers", () => {
@@ -462,7 +451,7 @@ describe("Division functionality", () => {
   });
 });
 
-
+/*
 describe("Multiplication functionality", () => {
   it("should multiply two numbers", () => {
     cy.visit("http://localhost:3000/");
@@ -622,7 +611,6 @@ describe("Multiplication functionality", () => {
     cy.get('[data-cy="display"]').should("contain.text", "-27.5");
   });
 });
-*/
 
 describe("Multiple operations chained together", () => {
   it("should enter a number then backspace then enter decimal then click add then enter a number then click enter", () => {
@@ -676,3 +664,4 @@ describe("Multiple operations chained together", () => {
     cy.get('[data-cy="display"]').should("not.contain.text");
   });
 });
+*/

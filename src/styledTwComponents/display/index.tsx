@@ -14,8 +14,8 @@ const Display = tw.div<DisplayProps>`
   justify-end
   pr-4  
 
-  text-5xl
-  truncate 
+  text-4xl
+  truncate  
   
   ${({
     state: {

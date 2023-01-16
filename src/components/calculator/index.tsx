@@ -204,9 +204,12 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         12
       );
       //prevents scientific notation when result does not have a decimal
-      result = result.toString().includes(".")
-        ? parseFloat(`${result}`).toPrecision(smallerOperandLength + 2)
-        : parseFloat(`${result}`);
+      result =
+        result === "Error: Division by 0"
+          ? "Error: Division by 0"
+          : result.toString().includes(".")
+          ? parseFloat(`${result}`).toPrecision(smallerOperandLength + 2)
+          : parseFloat(`${result}`);
 
       //only add to history if prevOperand, operator, and nextOperand are not null
       state.appState.history.push([
@@ -247,9 +250,12 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         12
       );
       //prevents scientific notation when result does not have a decimal
-      result = result.toString().includes(".")
-        ? parseFloat(`${result}`).toPrecision(smallerOperandLength + 2)
-        : parseFloat(`${result}`);
+      result =
+        result === "Error: Division by 0"
+          ? "Error: Division by 0"
+          : result.toString().includes(".")
+          ? parseFloat(`${result}`).toPrecision(smallerOperandLength + 2)
+          : parseFloat(`${result}`);
 
       //only add to history if prevOperand, operator, and nextOperand are not null
       state.appState.history.push([

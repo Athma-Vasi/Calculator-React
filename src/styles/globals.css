@@ -10,11 +10,3 @@ body,
 .app {
   @apply h-screen w-screen font-spartan;
 }
-
-.fontClamp {
-  font-size: clamp(1rem, 4vw, 2rem);
-}
-
-.widthClamp {
-  width: clamp(minmax(50px, 1fr), 5vw, minmax(100px, 1fr));
-}
