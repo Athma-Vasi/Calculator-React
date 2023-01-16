@@ -7,6 +7,7 @@ import { EnterBttn } from "../../styledTwComponents/enterBttn";
 import { History } from "../../styledTwComponents/history";
 import { OperandBttn } from "../../styledTwComponents/operandBttn";
 import { OperatorBttn } from "../../styledTwComponents/operatorBttn";
+import { String } from "cypress/types/lodash";
 
 type CalculatorProps = {
   state: State;
@@ -22,35 +23,97 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   function handleDecimalBttnClick(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
-    
+    const value = event.currentTarget.value;
   }
 
   function handleToggleMinusClick() {
     // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    const currentValue = state.appState.operand;
-
-    
   }
 
   function handleClearBttnClick() {
     // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    // setOperand("");
-    
+    state.appState.prevOperand = null;
+    state.appState.operator = null;
+    state.appState.nextOperand = null;
+    dispatch({
+      type: action.app.setAll,
+      payload: { state },
+    });
   }
 
   function handleBackspaceBttnClick() {
     // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    const currentValue = state.appState.operand;
-    const newValue =
-      currentValue.at(-1) === "-" ? "-" : currentValue.slice(0, -1);
-    
+    const currentValue = state.appState.prevOperand;
+    if (currentValue !== null) {
+      const newValue = currentValue.slice(0, -1);
+      state.appState.prevOperand = newValue;
+      dispatch({
+        type: action.app.setPrevOperand,
+        payload: { state },
+      });
+    }
   }
 
   function handleOperandBttnClick(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
     const number = event.currentTarget.value;
-    
+
+    if (state.appState.prevOperand === null) {
+      state.appState.prevOperand = `${number}`;
+      dispatch({
+        type: action.app.setPrevOperand,
+        payload: { state },
+      });
+    } else if (
+      state.appState.operator === null &&
+      state.appState.nextOperand === null
+    ) {
+      state.appState.prevOperand = `${state.appState.prevOperand}${number}`;
+      dispatch({
+        type: action.app.setPrevOperand,
+        payload: { state },
+      });
+    } else if (state.appState.nextOperand === null) {
+      state.appState.nextOperand = `${number}`;
+      dispatch({
+        type: action.app.setNextOperand,
+        payload: { state },
+      });
+    }
+
+    if (
+      state.appState.prevOperand !== null &&
+      state.appState.operator !== null &&
+      state.appState.nextOperand !== null
+    ) {
+      const result = calculate(
+        state.appState.prevOperand,
+        state.appState.operator,
+        state.appState.nextOperand
+      );
+
+      //only add to history if prevOperand, operator, and nextOperand are not null
+      state.appState.history.push([
+        state.appState.prevOperand,
+        state.appState.operator,
+        state.appState.nextOperand,
+        "=",
+        `${result}`,
+      ]);
+      dispatch({
+        type: action.app.setHistory,
+        payload: { state },
+      });
+
+      state.appState.prevOperand = null;
+      state.appState.nextOperand = null;
+      state.appState.operator = null;
+      dispatch({
+        type: action.app.setAll,
+        payload: { state },
+      });
+    }
   }
 
   function handleOperatorBttnClick(
@@ -58,18 +121,95 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   ) {
     const operator_ = event.currentTarget.value as Operator;
 
-    
+    state.appState.operator = operator_;
+    dispatch({
+      type: action.app.setOperator,
+      payload: { state },
+    });
 
-    
-    
+    if (
+      state.appState.prevOperand !== null &&
+      state.appState.nextOperand !== null &&
+      state.appState.operator !== null
+    ) {
+      const { prevOperand, operator, nextOperand } = state.appState;
+      const result = calculate(prevOperand, operator, nextOperand);
 
-      
+      //only add to history if prevOperand, operator, and nextOperand are not null
+      state.appState.history.push([
+        prevOperand,
+        operator,
+        nextOperand,
+        "=",
+        `${result}`,
+      ]);
+      dispatch({
+        type: action.app.setHistory,
+        payload: { state },
+      });
 
-      
+      state.appState.prevOperand = result.toString();
+      state.appState.nextOperand = null;
+      state.appState.operator = null;
+      dispatch({
+        type: action.app.setAll,
+        payload: { state },
+      });
+    }
+  }
 
-      
+  function calculate(
+    prevOperand: string,
+    operator: Operator,
+    nextOperand: string
+  ) {
+    const prevOperand_ = parseFloat(prevOperand);
+    const nextOperand_ = parseFloat(nextOperand);
 
-      
+    switch (operator) {
+      case "+":
+        return prevOperand_ + nextOperand_;
+      case "-":
+        return prevOperand_ - nextOperand_;
+      case "*":
+        return prevOperand_ * nextOperand_;
+      case "/":
+        return prevOperand_ / nextOperand_;
+      default:
+        return 0;
+    }
+  }
+
+  function handleEnterBttnClick() {
+    // event: React.MouseEvent<HTMLButtonElement>
+    if (
+      state.appState.prevOperand !== null &&
+      state.appState.nextOperand !== null &&
+      state.appState.operator !== null
+    ) {
+      const { prevOperand, operator, nextOperand } = state.appState;
+      const result = calculate(prevOperand, operator, nextOperand);
+
+      //only add to history if prevOperand, operator, and nextOperand are not null
+      state.appState.history.push([
+        prevOperand,
+        operator,
+        nextOperand,
+        "=",
+        `${result}`,
+      ]);
+      dispatch({
+        type: action.app.setHistory,
+        payload: { state },
+      });
+
+      state.appState.prevOperand = result.toString();
+      state.appState.nextOperand = null;
+      state.appState.operator = null;
+      dispatch({
+        type: action.app.setAll,
+        payload: { state },
+      });
     }
   }
 
@@ -82,9 +222,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
 
       {/* display */}
       <Display state={state} data-cy="display">
-        {state.appState.answer === ""
-          ? state.appState.operand
-          : state.appState.answer}
+        {state.appState.history.at(-1) ?? state.appState.history.at(-1)[4]}
       </Display>
 
       {/* buttons */}
@@ -241,7 +379,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
           <div className="col-span-2">
             <EnterBttn
               state={state}
-              onClick={handleOperatorBttnClick}
+              onClick={handleEnterBttnClick}
               data-cy="bttn-enter"
               value="="
             >

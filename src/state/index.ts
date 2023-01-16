@@ -2,10 +2,9 @@ import type { Action, Dispatch, State } from "../typings/types";
 
 const initialState: State = {
   appState: {
-    operand: "",
-    operator: "",
-    expressions: [],
-    answer: "",
+    prevOperand: null,
+    operator: null,
+    nextOperand: null,
     history: [],
   },
   themeState: {
@@ -15,10 +14,10 @@ const initialState: State = {
 
 const action: Action = {
   app: {
-    setOperand: "setOperand",
+    setPrevOperand: "setPrevOperand",
     setOperator: "setOperator",
-    setExpression: "setExpression",
-    setAnswer: "setAnswer",
+    setNextOperand: "setNextOperand",
+    setAll: "setAll",
     setHistory: "setHistory",
   },
   theme: {
@@ -30,7 +29,7 @@ function reducer(state: State, action: Dispatch) {
   // deep clone the state object
   const clone = structuredClone(state);
   const {
-    appState: { operand, operator, expressions, answer, history },
+    appState: { prevOperand, operator, nextOperand, history },
     themeState: { $theme },
   } = action.payload.state;
 
@@ -39,20 +38,24 @@ function reducer(state: State, action: Dispatch) {
       clone.themeState.$theme = $theme;
       return clone;
     }
-    case "setOperand": {
-      clone.appState.operand = operand;
+    case "setPrevOperand": {
+      clone.appState.prevOperand = prevOperand;
       return clone;
     }
     case "setOperator": {
       clone.appState.operator = operator;
       return clone;
     }
-    case "setExpression": {
-      clone.appState.expressions = expressions;
+    case "setNextOperand": {
+      clone.appState.nextOperand = nextOperand;
       return clone;
     }
-    case "setAnswer": {
-      clone.appState.answer = answer;
+    case "setAll": {
+      clone.appState.prevOperand = prevOperand;
+      clone.appState.operator = operator;
+      clone.appState.nextOperand = nextOperand;
+      clone.appState.history = history;
+
       return clone;
     }
     case "setHistory": {

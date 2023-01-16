@@ -1,10 +1,9 @@
 export type State = {
   appState: {
-    operand: string;
-    operator: Operator | "";
-    expressions: string[];
-    answer: string;
-    history: string[][];
+    prevOperand: null | string;
+    operator: null | Operator;
+    nextOperand: null | string;
+    history: Array<string[]>;
   };
   themeState: {
     $theme: "theme1" | "theme2" | "theme3";
@@ -20,10 +19,10 @@ export type Dispatch = {
 
 export type Action = {
   app: {
-    setOperand: "setOperand";
+    setPrevOperand: "setPrevOperand";
     setOperator: "setOperator";
-    setExpression: "setExpression";
-    setAnswer: "setAnswer";
+    setNextOperand: "setNextOperand";
+    setAll: "setAll";
     setHistory: "setHistory";
   };
   theme: {
