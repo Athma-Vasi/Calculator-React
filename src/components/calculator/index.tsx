@@ -203,7 +203,10 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         nextOperand.length > 12 ? 12 : nextOperand.length,
         12
       );
-      result = parseFloat(`${result}`).toPrecision(smallerOperandLength + 1);
+      //prevents scientific notation when result does not have a decimal
+      result = result.toString().includes(".")
+        ? parseFloat(`${result}`).toPrecision(smallerOperandLength + 2)
+        : parseFloat(`${result}`);
 
       //only add to history if prevOperand, operator, and nextOperand are not null
       state.appState.history.push([
@@ -243,7 +246,10 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         nextOperand.length > 12 ? 12 : nextOperand.length,
         12
       );
-      result = parseFloat(`${result}`).toPrecision(smallerOperandLength + 1);
+      //prevents scientific notation when result does not have a decimal
+      result = result.toString().includes(".")
+        ? parseFloat(`${result}`).toPrecision(smallerOperandLength + 2)
+        : parseFloat(`${result}`);
 
       //only add to history if prevOperand, operator, and nextOperand are not null
       state.appState.history.push([
@@ -270,6 +276,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   }
 
   useEffect(() => {
+    //scrolls to the bottom of the history div when new expression is added
     function handleHistoryDivScroll() {
       const historyDiv = document.querySelector(
         '[data-cy="history"]'
