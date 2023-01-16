@@ -199,7 +199,13 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
       state.appState.operator !== null
     ) {
       const { prevOperand, operator, nextOperand } = state.appState;
-      const result = calculate(prevOperand, operator, nextOperand);
+      let result = calculate(prevOperand, operator, nextOperand);
+      const smallerOperandLength = Math.min(
+        prevOperand.length > 12 ? 12 : prevOperand.length,
+        nextOperand.length > 12 ? 12 : nextOperand.length,
+        12
+      );
+      result = parseFloat(`${result}`).toPrecision(smallerOperandLength + 1);
 
       //only add to history if prevOperand, operator, and nextOperand are not null
       state.appState.history.push([
@@ -257,7 +263,13 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
       state.appState.operator !== null
     ) {
       const { prevOperand, operator, nextOperand } = state.appState;
-      const result = calculate(prevOperand, operator, nextOperand);
+      let result = calculate(prevOperand, operator, nextOperand);
+      const smallerOperandLength = Math.min(
+        prevOperand.length > 12 ? 12 : prevOperand.length,
+        nextOperand.length > 12 ? 12 : nextOperand.length,
+        12
+      );
+      result = parseFloat(`${result}`).toPrecision(smallerOperandLength + 1);
 
       //only add to history if prevOperand, operator, and nextOperand are not null
       state.appState.history.push([
@@ -499,131 +511,3 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
 }
 
 export default Calculator;
-
-/**
- if (state.appState.expressions.length > 2) {
-        const operators = "+*-/";
-        const [prevOperandStr, operator, nextOperandStr] =
-          state.appState.expressions.slice(0, 3) as [
-            string,
-            Operator | "",
-            string
-          ];
-
-        {
-          const largerLengthOfOperands =
-            prevOperandStr.length > nextOperandStr.length
-              ? prevOperandStr.length + 1
-              : nextOperandStr.length + 1;
-
-          const prevOperandDigitsAfterDecimal = prevOperandStr.includes(".")
-            ? (prevOperandStr.split(".")[1]?.length as number)
-            : (0 as number);
-
-          const nextOperandDigitsAfterDecimal = nextOperandStr.includes(".")
-            ? (nextOperandStr.split(".")[1]?.length as number)
-            : (0 as number);
-
-          //choose the smallest value of digits after decimal
-          const resultDigitsAfterDecimal =
-            prevOperandDigitsAfterDecimal > nextOperandDigitsAfterDecimal
-              ? nextOperandDigitsAfterDecimal
-              : prevOperandDigitsAfterDecimal;
-
-          let result = "";
-          const prevOperandNum = parseFloat(prevOperandStr);
-          const nextOperandNum = parseFloat(nextOperandStr);
-
-          switch (operator) {
-            case "/": {
-              nextOperandNum === 0
-                ? (result = "Error: Divide by 0")
-                : (result =
-                    resultDigitsAfterDecimal === 0
-                      ? (prevOperandNum / nextOperandNum).toPrecision(
-                          largerLengthOfOperands < 12
-                            ? largerLengthOfOperands
-                            : 12
-                        )
-                      : (prevOperandNum / nextOperandNum).toFixed(
-                          resultDigitsAfterDecimal < 12
-                            ? resultDigitsAfterDecimal
-                            : 12
-                        ));
-              break;
-            }
-            case "+": {
-              result =
-                resultDigitsAfterDecimal === 0
-                  ? (prevOperandNum + nextOperandNum).toPrecision(
-                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                    )
-                  : (prevOperandNum + nextOperandNum).toFixed(
-                      resultDigitsAfterDecimal < 12
-                        ? resultDigitsAfterDecimal
-                        : 12
-                    );
-              break;
-            }
-            case "-": {
-              result =
-                resultDigitsAfterDecimal === 0
-                  ? (prevOperandNum - nextOperandNum).toPrecision(
-                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                    )
-                  : (prevOperandNum - nextOperandNum).toFixed(
-                      resultDigitsAfterDecimal < 12
-                        ? resultDigitsAfterDecimal
-                        : 12
-                    );
-              break;
-            }
-            case "*": {
-              result =
-                resultDigitsAfterDecimal === 0
-                  ? (prevOperandNum * nextOperandNum).toPrecision(
-                      largerLengthOfOperands < 12 ? largerLengthOfOperands : 12
-                    )
-                  : (prevOperandNum * nextOperandNum).toFixed(
-                      resultDigitsAfterDecimal < 12
-                        ? resultDigitsAfterDecimal
-                        : 12
-                    );
-              break;
-            }
-            case "=": {
-              result = prevOperandStr;
-              break;
-            }
-            default:
-              result = "0";
-              break;
-          }
-
-          state.appState.history.push([
-            prevOperandStr,
-            operator,
-            nextOperandStr,
-            result,
-          ]);
-
-          state.appState.answer = result;
-          dispatch({
-            type: action.app.setAnswer,
-            payload: {
-              state,
-            },
-          });
-
-          for (let i = 0; i < 3; i += 1) state.appState.expressions.shift();
-          state.appState.expressions.unshift(result);
-
-          dispatch({
-            type: action.app.setExpression,
-            payload: {
-              state,
-            },
-          });
-        }
-      }
- */
