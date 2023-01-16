@@ -28,6 +28,38 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
 
   function handleToggleMinusClick() {
     // event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    const currentValue =
+      state.appState.nextOperand === null
+        ? state.appState.prevOperand
+        : state.appState.nextOperand;
+
+    if (currentValue !== null) {
+      if (!currentValue.includes("-")) {
+        state.appState.nextOperand === null
+          ? (state.appState.prevOperand = `-${currentValue}`)
+          : (state.appState.nextOperand = `-${currentValue}`);
+
+        dispatch({
+          type:
+            state.appState.nextOperand === null
+              ? action.app.setPrevOperand
+              : action.app.setNextOperand,
+          payload: { state },
+        });
+      } else {
+        state.appState.nextOperand === null
+          ? (state.appState.prevOperand = currentValue.slice(1))
+          : (state.appState.nextOperand = currentValue.slice(1));
+
+        dispatch({
+          type:
+            state.appState.nextOperand === null
+              ? action.app.setPrevOperand
+              : action.app.setNextOperand,
+          payload: { state },
+        });
+      }
+    }
   }
 
   function handleClearBttnClick() {
@@ -56,7 +88,10 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
         : (state.appState.nextOperand = newValue);
 
       dispatch({
-        type: action.app.setPrevOperand,
+        type:
+          state.appState.nextOperand === null
+            ? action.app.setPrevOperand
+            : action.app.setNextOperand,
         payload: { state },
       });
     }
