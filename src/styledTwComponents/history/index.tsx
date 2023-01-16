@@ -9,13 +9,18 @@ const History = tw.div<HistoryProps>`
   row-span-1
   rounded-lg
 
+  h-[90px]
+  text-xl
+  
   flex
   items-center
   justify-end
-  pr-4
+  px-4
+  py-2
 
-  text-4xl
-  truncate    
+  overflow-y-auto
+  text-ellipsis 
+  whitespace-nowrap  
   
   ${({
     state: {

@@ -29,6 +29,8 @@ const action: Action = {
 
 function reducer(state: State, action: Dispatch) {
   // deep clone the state object
+  // reducer only updates and returns the cloned state object; it does not mutate the original state object
+  // all mutations occur on the original state object inside the event handlers
   const clone = structuredClone(state);
   const {
     appState: { prevOperand, operator, nextOperand, history, result },

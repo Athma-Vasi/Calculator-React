@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { v4 as v4uuid } from "uuid";
 import type { Action, Dispatch, Operator, State } from "../../typings/types";
 
 import { BttnsContainer } from "../../styledTwComponents/bttnsContainer";
@@ -268,11 +269,39 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
     }
   }
 
+  useEffect(() => {
+    function handleHistoryDivScroll() {
+      const historyDiv = document.querySelector(
+        '[data-cy="history"]'
+      ) as HTMLDivElement;
+
+      const scrollHeight = historyDiv.scrollHeight;
+      historyDiv.scroll({ top: scrollHeight, left: 0, behavior: "smooth" });
+    }
+
+    handleHistoryDivScroll();
+  });
+
   return (
     <div className="grid h-full w-full grid-rows-6 gap-y-5">
       {/* history */}
       <History state={state} data-cy="history">
-        {JSON.stringify(state.appState.history)}
+        <div className="flex w-full flex-col items-end justify-between gap-y-3 ">
+          {state.appState.history.map(
+            ([prevOperand, operator, nextOperand, enter, result]) => (
+              <div
+                key={v4uuid()}
+                className="flex w-full flex-row items-center justify-end gap-x-3"
+              >
+                <p>{prevOperand}</p>
+                <p>{operator}</p>
+                <p>{nextOperand}</p>
+                <p>{enter}</p>
+                <p>{result}</p>
+              </div>
+            )
+          )}
+        </div>
       </History>
 
       {/* display */}

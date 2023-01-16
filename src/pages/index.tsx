@@ -262,9 +262,9 @@ const Home: NextPage = () => {
       {/* left padding empty div */}
       <div className="col-span-1 row-start-1 row-end-4 "></div>
 
-      <div className="col-span-1 row-start-2 row-end-3 grid grid-rows-[7] ">
+      <div className="col-span-1 row-start-2 row-end-3 grid grid-rows-[7]">
         <Header state={state}>
-          <h1 className="text-4xl font-bold">calc</h1>
+          <h1 className="mt-3 text-4xl font-bold">calc</h1>
           {/* theme */}
           <div className="flex flex-col ">
             {/* theme nums */}
@@ -284,7 +284,7 @@ const Home: NextPage = () => {
           </div>
         </Header>
 
-        <div className="row-span-6">
+        <div className="row-span-6 mt-2">
           <Calculator state={state} action={action} dispatch={dispatch} />
         </div>
       </div>

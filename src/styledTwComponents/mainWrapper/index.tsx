@@ -15,7 +15,7 @@ const MainWrapper = tw.div<MainWrapperProps>`
   grid
   h-screen
   w-screen
-
+  
   ${({ windowsize: { width, height } }) =>
     width < 768
       ? `grid-cols-smWrapper grid-rows-smWrapper`
