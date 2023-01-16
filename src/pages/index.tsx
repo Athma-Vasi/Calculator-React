@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import Calculator from "../components/calculator";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { action, initialState, reducer } from "../state";
@@ -8,6 +8,7 @@ import { Header } from "../styledTwComponents/header";
 import { MainWrapper } from "../styledTwComponents/mainWrapper";
 import { ThemeSwitch } from "../styledTwComponents/themeSwitch";
 import { ThemeSwitchBg } from "../styledTwComponents/themeSwitchBg";
+import { calculate } from "../utils";
 
 const Home: NextPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -36,11 +37,60 @@ const Home: NextPage = () => {
 
     dispatch({
       type: action.theme.switchTheme,
-      payload: {
-        state,
-      },
+      payload: { state },
     });
   }
+
+  useEffect(() => {
+    //capture keyboard input
+    function handleKeyDown(event: KeyboardEvent) {
+      console.log("event.key", event.key);
+
+      if (!Number.isNaN(parseFloat(event.key))) {
+        const number = parseFloat(event.key);
+
+        if (state.appState.prevOperand === null) {
+          state.appState.prevOperand = `${number}`;
+          dispatch({
+            type: action.app.setPrevOperand,
+            payload: { state },
+          });
+        } else if (
+          state.appState.operator === null &&
+          state.appState.nextOperand === null
+        ) {
+          state.appState.prevOperand = `${state.appState.prevOperand}${number}`;
+          dispatch({
+            type: action.app.setPrevOperand,
+            payload: { state },
+          });
+        } else if (
+          state.appState.prevOperand !== null &&
+          state.appState.operator !== null &&
+          state.appState.nextOperand === null
+        ) {
+          state.appState.nextOperand = `${number}`;
+          dispatch({
+            type: action.app.setNextOperand,
+            payload: { state },
+          });
+        } else if (
+          state.appState.prevOperand !== null &&
+          state.appState.operator !== null &&
+          state.appState.nextOperand !== null
+        ) {
+          state.appState.nextOperand = `${state.appState.nextOperand}${number}`;
+          dispatch({
+            type: action.app.setNextOperand,
+            payload: { state },
+          });
+        }
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  });
 
   return (
     <MainWrapper state={state} windowsize={windowsize}>
