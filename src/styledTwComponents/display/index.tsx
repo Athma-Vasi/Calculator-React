@@ -12,7 +12,7 @@ const Display = tw.div<DisplayProps>`
   flex
   items-center
   justify-end
-  pr-4
+  pr-4  
 
   text-5xl
   truncate 

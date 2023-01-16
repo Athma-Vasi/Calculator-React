@@ -14,6 +14,10 @@ const OperatorBttn = tw.button<OperatorBttnProps>`
   shadow-md 
   truncate
 
+  active:shadow-inner
+  active:translate-y-[2px]
+  duration-150
+
   ${({
     state: {
       themeState: { $theme },

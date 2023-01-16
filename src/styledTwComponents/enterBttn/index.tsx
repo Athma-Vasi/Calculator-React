@@ -15,6 +15,10 @@ const EnterBttn = tw.button<EnterBttnProps>`
   w-full 
   h-full
 
+  active:shadow-inner
+  active:translate-y-[2px]
+  duration-150
+
   ${({
     state: {
       themeState: { $theme },
