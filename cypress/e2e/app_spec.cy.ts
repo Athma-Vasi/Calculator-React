@@ -1,6 +1,5 @@
 import { mount } from "cypress/react18";
 
-/*
 describe("Theme switching", () => {
   it("should have switch in second position at initial visit", () => {
     cy.visit("http://localhost:3000/");
@@ -262,7 +261,6 @@ describe("Subtraction functionality", () => {
     cy.get("[data-cy='display']").should("contain.text", "0");
   });
 });
-*/
 
 describe("Division functionality", () => {
   it("should divide two numbers", () => {
@@ -451,7 +449,6 @@ describe("Division functionality", () => {
   });
 });
 
-/*
 describe("Multiplication functionality", () => {
   it("should multiply two numbers", () => {
     cy.visit("http://localhost:3000/");
@@ -664,4 +661,103 @@ describe("Multiple operations chained together", () => {
     cy.get('[data-cy="display"]').should("not.contain.text");
   });
 });
-*/
+
+describe("Operations visible in History", () => {
+  it("should show the operation in history", () => {
+    cy.visit("http://localhost:3000/");
+
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="history"]').should("contain.text", "5*5=25");
+  });
+
+  it("should show next operation and previous operation in history", () => {
+    cy.visit("http://localhost:3000/");
+
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="history"]').should("contain.text", "5*5=25");
+
+    cy.get('[data-cy="bttn-7"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-7"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="history"]').should("contain.text", "5*5=25");
+    cy.get('[data-cy="history"]').should("contain.text", "7*7=49");
+  });
+
+  it("should show next operation and previous operation in history and operation containing division by 0", () => {
+    cy.visit("http://localhost:3000/");
+
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="history"]').should("contain.text", "5*5=25");
+
+    cy.get('[data-cy="bttn-7"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-7"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="history"]').should("contain.text", "5*5=25");
+    cy.get('[data-cy="history"]').should("contain.text", "7*7=49");
+
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="history"]').should("contain.text", "5*5=25");
+    cy.get('[data-cy="history"]').should("contain.text", "7*7=49");
+    cy.get('[data-cy="history"]').should(
+      "contain.text",
+      "5/0=Error: Division by 0"
+    );
+  });
+
+  it("should treat next operand as zero in an operation containing multiple chained operators and negative and positive numbers and decimals, after an operation containing division by zero", () => {
+    cy.visit("http://localhost:3000/");
+
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-divide"]').click();
+    cy.get('[data-cy="bttn-0"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="history"]').should(
+      "contain.text",
+      "5/0=Error: Division by 0"
+    );
+
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="history"]').should(
+      "contain.text",
+      "5/0=Error: Division by 0"
+    );
+    cy.get('[data-cy="history"]').should("contain.text", "0*5.5=0");
+
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-multiply"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-decimal"]').click();
+    cy.get('[data-cy="bttn-5"]').click();
+    cy.get('[data-cy="bttn-enter"]').click();
+    cy.get('[data-cy="history"]').should(
+      "contain.text",
+      "5/0=Error: Division by 0"
+    );
+    cy.get('[data-cy="history"]').should("contain.text", "0*5.5=0");
+    cy.get('[data-cy="history"]').should("contain.text", "5.5*5.5=30.250");
+  });
+});
