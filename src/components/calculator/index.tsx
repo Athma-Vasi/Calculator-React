@@ -298,7 +298,7 @@ function Calculator({ state, action, dispatch }: CalculatorProps) {
   return (
     <div className="grid h-full w-full grid-rows-6 gap-y-5">
       {/* history */}
-      <History state={state} data-cy="history">
+      <History state={state} data-cy="history" className="historyView">
         <div className="flex w-full flex-col items-end justify-between gap-y-3 ">
           {state.appState.history.map(
             ([prevOperand, operator, nextOperand, enter, result]) => (

@@ -28,10 +28,6 @@ const action: Action = {
 };
 
 function reducer(state: State, action: Dispatch) {
-  // deep clone the state object
-  // reducer only updates and returns the cloned state object; it does not mutate the original state object
-  // all mutations occur on the original state object inside the event handlers
-  const clone = structuredClone(state);
   const {
     appState: { prevOperand, operator, nextOperand, history, result },
     themeState: { $theme },
@@ -39,41 +35,74 @@ function reducer(state: State, action: Dispatch) {
 
   switch (action.type) {
     case "switchTheme": {
-      clone.themeState.$theme = $theme;
-      return clone;
+      return {
+        ...state,
+        themeState: {
+          $theme: $theme === "theme1" ? "theme2" : "theme1",
+        },
+      };
     }
     case "setPrevOperand": {
-      clone.appState.prevOperand = prevOperand;
-      return clone;
+      return {
+        ...state,
+        appState: {
+          ...state.appState,
+          prevOperand,
+        },
+      };
     }
     case "setOperator": {
-      clone.appState.operator = operator;
-      return clone;
+      return {
+        ...state,
+        appState: {
+          ...state.appState,
+          operator,
+        },
+      };
     }
     case "setNextOperand": {
-      clone.appState.nextOperand = nextOperand;
-      return clone;
+      return {
+        ...state,
+        appState: {
+          ...state.appState,
+          nextOperand,
+        },
+      };
     }
     case "setResult": {
-      clone.appState.result = result;
-      return clone;
+      return {
+        ...state,
+        appState: {
+          ...state.appState,
+          result,
+        },
+      };
     }
     case "setHistory": {
-      clone.appState.history = history;
-      return clone;
+      return {
+        ...state,
+        appState: {
+          ...state.appState,
+          history,
+        },
+      };
     }
     case "setAll": {
-      clone.appState.prevOperand = prevOperand;
-      clone.appState.operator = operator;
-      clone.appState.nextOperand = nextOperand;
-      clone.appState.result = result;
-      clone.appState.history = history;
-
-      return clone;
+      return {
+        ...state,
+        appState: {
+          ...state.appState,
+          prevOperand,
+          operator,
+          nextOperand,
+          result,
+          history,
+        },
+      };
     }
 
     default:
-      return clone;
+      return state;
   }
 }
 
